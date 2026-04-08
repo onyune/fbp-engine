@@ -52,4 +52,5 @@ public class Message {
         return new Message(this.id, newPayload, this.timestamp);
     }
 
+
 }
