@@ -3,6 +3,10 @@ package com.fbp.engine.node.impl;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
 
+/**
+ * input port : in
+ * output port : out
+ */
 public class CounterNode extends AbstractNode {
     private int count = 0;
 

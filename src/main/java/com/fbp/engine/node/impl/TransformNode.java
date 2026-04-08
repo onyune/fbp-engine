@@ -4,6 +4,10 @@ import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
 import java.util.function.Function;
 
+/**
+ * input port : in
+ * output port : out
+ */
 public class TransformNode extends AbstractNode {
     private final Function<Message, Message> transformer;
 

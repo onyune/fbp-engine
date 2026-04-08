@@ -5,6 +5,10 @@ import com.fbp.engine.node.AbstractNode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * input port : X
+ * output port : out
+ */
 public class GeneratorNode extends AbstractNode {
 
 

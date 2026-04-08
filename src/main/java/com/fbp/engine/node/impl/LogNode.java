@@ -5,6 +5,10 @@ import com.fbp.engine.node.AbstractNode;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * input port : in
+ * output port : out
+ */
 public class LogNode extends AbstractNode {
     public LogNode(String id) {
         super(id);

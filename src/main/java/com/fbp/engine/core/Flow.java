@@ -15,10 +15,18 @@ public class Flow {
         VISITING, // 방문중
         VISITED, // 방문함
     }
+    public enum FlowState{
+        RUNNING,
+        STOPPED
+    }
 
     //Flow id
     @Getter
     private final String id;
+
+    //개별 플로우의 상태
+    @Getter
+    private FlowState state;
 
     //등록된 노드들
     private final Map<String, AbstractNode> nodes = new HashMap<>();
@@ -29,6 +37,7 @@ public class Flow {
 
     public Flow(String id) {
         this.id = id;
+        this.state = FlowState.STOPPED;
     }
 
     /**
@@ -106,6 +115,7 @@ public class Flow {
         for (AbstractNode an : nodes.values()) {
             an.initialize();
         }
+        this.state=FlowState.RUNNING;
     }
 
     /**
@@ -115,6 +125,7 @@ public class Flow {
         for (AbstractNode an : nodes.values()) {
             an.shutdown();
         }
+        this.state=FlowState.STOPPED;
     }
 
     /**
@@ -126,6 +137,13 @@ public class Flow {
 
     // getConnections()는 롬복으로 해결
 
+    /**
+     * Flow에 대한 validate
+     * Flow에 등록된 노드가 있는 지
+     * target이 설정되지않은 connection이 있는 지
+     * Flow가 순환 참조를 하는 지
+     * @return
+     */
 
     public List<String> validate() {
         List<String> errors = new ArrayList<>();

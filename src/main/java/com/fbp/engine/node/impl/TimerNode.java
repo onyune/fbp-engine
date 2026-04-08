@@ -8,6 +8,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * input port : X
+ * output port : out
+ */
 public class TimerNode extends AbstractNode {
     private final long intervalMs;
     private int tickCount =0 ;

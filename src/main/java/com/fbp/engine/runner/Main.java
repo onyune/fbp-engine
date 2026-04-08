@@ -2,9 +2,8 @@ package com.fbp.engine.runner;
 
 import com.fbp.engine.core.Connection;
 import com.fbp.engine.core.Flow;
+import com.fbp.engine.core.FlowEngine;
 import com.fbp.engine.message.Message;
-import com.fbp.engine.node.impl.FilterNode;
-import com.fbp.engine.node.impl.LogNode;
 import com.fbp.engine.node.impl.PrintNode;
 import com.fbp.engine.node.impl.TimerNode;
 
@@ -12,44 +11,51 @@ public class Main {
     private static volatile boolean running = true;
 
     public static void main(String[] args) throws InterruptedException {
-        Flow flow = new Flow("flowTest");
+        Flow flow1 = new Flow("flowTest1");
+        Flow flow2 = new Flow("flowTest2");
 
-        TimerNode timerNode = new TimerNode("timer", 1000);
-        LogNode logger = new LogNode("logger");
-        FilterNode filter = new FilterNode("filter","tick", 3);
-        PrintNode printer = new PrintNode("printer");
+        FlowEngine flowEngine = new FlowEngine();
 
-        flow.addNode(timerNode)
-                .addNode(logger)
-                .addNode(filter)
-                .addNode(printer);
+        TimerNode timerNode1 = new TimerNode("timer1", 500);
+        TimerNode timerNode2 = new TimerNode("timer2", 1000);
 
-        flow.connect(timerNode.getId(), "out", logger.getId(), "in")
-                .connect(logger.getId(), "out", filter.getId(), "in")
-                .connect(filter.getId(), "out", printer.getId(), "in");
+        PrintNode printNode1 = new PrintNode("printer1");
+        PrintNode printNode2 = new PrintNode("printer2");
 
-        Connection c1 = flow.getConnections().get(0);
-        Connection c2 = flow.getConnections().get(1);
-        Connection c3 = flow.getConnections().get(2);
+        flow1.addNode(timerNode1)
+                .addNode(printNode1)
+                .connect(timerNode1.getId(),"out", printNode1.getId(), "in");
+        flow2.addNode(timerNode2)
+                .addNode(printNode2)
+                .connect(timerNode2.getId(),"out", printNode2.getId(), "in");
 
-        Thread t1 = new Thread(() -> { while (running) { Message m = c1.poll(); if (m != null) logger.getInputPort("in").receive(m); } });
-        Thread t2 = new Thread(() -> { while (running) { Message m = c2.poll(); if (m != null) filter.getInputPort("in").receive(m); } });
-        Thread t3 = new Thread(() -> { while (running) { Message m = c3.poll(); if (m != null) printer.getInputPort("in").receive(m); } });
+        Connection c1 = flow1.getConnections().get(0);
+        Connection c2 = flow2.getConnections().get(0);
 
-        t1.start();
-        t2.start();
-        t3.start();
-        flow.initialize();
+        Thread worker1 = new Thread(() -> {
+            while (running) {
+                Message m = c1.poll();
+                if (m != null)
+                    printNode1.getInputPort("in").receive(m);
+            }
+        });
+        Thread worker2 = new Thread(() -> {
+            while (running) { Message m = c2.poll(); if (m != null) printNode2.getInputPort("in").receive(m); }
+        });
 
-        try{
-            Thread.sleep(7000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        worker1.start();
+        worker2.start();
+        flowEngine.register(flow1);
+        flowEngine.register(flow2);
+
+        flowEngine.startFlow(flow1.getId());
+        flowEngine.startFlow(flow2.getId());
+
+        Thread.sleep(5000);
+
         running=false;
-        t1.interrupt();
-        t2.interrupt();
-        t3.interrupt();
-        flow.shutdown();
+        worker1.interrupt();
+        worker2.interrupt();
+        flowEngine.shutdown();
     }
 }

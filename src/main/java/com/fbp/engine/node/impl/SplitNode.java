@@ -3,6 +3,10 @@ package com.fbp.engine.node.impl;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
 
+/**
+ * input port : in
+ * output port : match / mismatch
+ */
 public class SplitNode extends AbstractNode {
     private final String key;
     private final double threshold;
