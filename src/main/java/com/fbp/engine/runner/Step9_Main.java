@@ -10,7 +10,7 @@ import com.fbp.engine.node.impl.TemperatureSensorNode;
 import com.fbp.engine.node.impl.ThresholdFilterNode;
 import com.fbp.engine.node.impl.TimerNode;
 
-public class Step9_4_5Main {
+public class Step9_Main {
     public static void main(String[] args) throws InterruptedException {
         Flow flow = new Flow("flow");
         FlowEngine flowEngine = new FlowEngine();

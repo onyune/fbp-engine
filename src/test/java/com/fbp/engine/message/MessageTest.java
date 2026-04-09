@@ -33,14 +33,14 @@ class MessageTest {
     }
 
     @Test
-    @DisplayName("생성 시 넣은 key-value를 get()으로 꺼낼 수 있음 / get(\"temperature\")의 반환 타입이 Double로 사용 가능")
+    @DisplayName("생성 시 넣은 key-value를 get()으로 꺼낼 수 있음 / get(temperature)의 반환 타입이 Double로 사용 가능")
     void keyValueTest(){
         Double temp = msg.get("temperature");
         assertEquals(22.2, temp);
     }
 
     @Test
-    @DisplayName("get(\"없는키\")가 null 반환")
+    @DisplayName("get(없는키)가 null 반환")
     void generic_get(){
         assertNull(msg.get("없는 키"));
     }
@@ -71,7 +71,7 @@ class MessageTest {
     }
 
     @Test
-    @DisplayName("hasKey(\"temperature\")가 true &&  hasKey(\"없는키\")가 false "
+    @DisplayName("hasKey(temperature)가 true &&  hasKey(없는키)가 false "
             + "&& 반환된 Message에서 해당 키가 없음 && 원본 Message에는 해당 키가 여전히 있음")
     void hasKeyTest(){
         assertTrue(msg.hasKey("temperature"));

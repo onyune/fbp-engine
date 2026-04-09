@@ -17,6 +17,7 @@ public class DefaultInputPort implements InputPort {
 
     @Override
     public void receive(Message message) {
-        owner.process(message);
+        Message taggedMessage = message.withEntry("__inPort", this.getName());
+        owner.process(taggedMessage);
     }
 }
