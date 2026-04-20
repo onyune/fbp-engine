@@ -28,7 +28,7 @@ public abstract class ProtocolNode extends AbstractNode {
     private int maxRetries;
     private int currentRetryCount =0;
 
-    public ProtocolNode(String id, Map<String, Object> config) {
+    protected ProtocolNode(String id, Map<String, Object> config) {
         super(id);
         this.config = config;
         this.connectionState = ConnectionState.DISCONNECTED;
@@ -75,15 +75,16 @@ public abstract class ProtocolNode extends AbstractNode {
     }
 
     // 하위 클래스가 실제 연결 로직 구현 (예외 발생 가능)
-    abstract void connect() throws Exception;
+    protected abstract void connect() throws Exception;
 
     // 하위 클래스가 실제 연결 해제 로직 구현
-    abstract void disconnect() throws Exception;
+    protected abstract void disconnect() throws Exception;
 
     protected void reconnect() {
         if(currentRetryCount >= maxRetries){
             log.error("[{}] 최대 재연결 시도 횟수({}회) 초과. 재시도를 중단합니다.", getId(), maxRetries);
             this.connectionState = ConnectionState.ERROR;
+            return;
         }
         if(scheduler == null || scheduler.isShutdown()){
             scheduler = Executors.newSingleThreadScheduledExecutor();

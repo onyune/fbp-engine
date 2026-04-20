@@ -20,7 +20,7 @@ public class DelayNode extends AbstractNode {
     @Override
     protected void onProcess(Message message) {
         try{
-            Thread.sleep(delayMs);
+            Thread.sleep(delayMs);//Thread로 sleep하게 되면 다른 노드들도 멈출 수 있음
             send("out", message);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
