@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * input port : trigger
  * output port : out, error
+ * Modbus장비에서 레지스터 값을 읽어 FBP 플로우에 주입하는 노드
  */
 @Slf4j
 public class ModbusReaderNode extends ProtocolNode {
