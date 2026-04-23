@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Flow {
 
@@ -27,6 +28,15 @@ public class Flow {
     //개별 플로우의 상태
     @Getter
     private FlowState state;
+
+    @Setter
+    private String name;
+
+    public String getName(){
+        return (name != null && !name.isEmpty()) ? name : id;
+    }
+
+
 
     //등록된 노드들
     private final Map<String, AbstractNode> nodes = new HashMap<>();

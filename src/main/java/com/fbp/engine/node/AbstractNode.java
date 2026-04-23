@@ -5,13 +5,22 @@ import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.core.impl.DefaultInputPort;
 import com.fbp.engine.core.impl.DefaultOutputPort;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.metrics.MetricsCollector;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public abstract class AbstractNode implements Node{
     @Getter
     private final String id;
+
+    @Setter
+    @Getter
+    private String flowId;
+
 
     public AbstractNode(String id) {
         this.id = id;
@@ -44,8 +53,19 @@ public abstract class AbstractNode implements Node{
 
     @Override
     public final void process(Message message) {
-        System.out.println("["+id+"] processing message");
-        onProcess(message);
+        long startTime = System.currentTimeMillis();
+        boolean success = true;
+        try{
+            onProcess(message);
+        }catch (Exception e){
+            success=false;
+            throw e;
+        }finally {
+            long durationMs = System.currentTimeMillis() -startTime;
+            String metricKey = (flowId != null ? flowId + ":" : "") + id;
+            MetricsCollector.getInstance()
+                    .recordProcessing(metricKey, durationMs, success);
+        }
     }
 
     @Override
