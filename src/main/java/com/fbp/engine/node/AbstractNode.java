@@ -4,6 +4,8 @@ import com.fbp.engine.core.InputPort;
 import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.core.impl.DefaultInputPort;
 import com.fbp.engine.core.impl.DefaultOutputPort;
+import com.fbp.engine.core.impl.ErrorPort;
+import com.fbp.engine.exception.NodeProcessException;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.metrics.MetricsCollector;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public abstract class AbstractNode implements Node{
 
     public AbstractNode(String id) {
         this.id = id;
+        this.outputPorts.put("error", new ErrorPort());
     }
 
     private final Map<String, InputPort> inputPorts = new HashMap<>();
@@ -59,13 +62,26 @@ public abstract class AbstractNode implements Node{
             onProcess(message);
         }catch (Exception e){
             success=false;
-            throw e;
+            handlerError(message, e);
         }finally {
             long durationMs = System.currentTimeMillis() -startTime;
             String metricKey = (flowId != null ? flowId + ":" : "") + id;
             MetricsCollector.getInstance()
                     .recordProcessing(metricKey, durationMs, success);
         }
+    }
+
+    protected void handlerError(Message originalMessage, Exception e){
+        NodeProcessException nodeProcessException = new NodeProcessException("Error in node ["+id+"]");
+        Map<String, Object> errorPayload = new HashMap<>();
+        errorPayload.put("error", nodeProcessException); // 실제 예외 객체
+        errorPayload.put("errorNodeId", this.id); // 에러가 발생한 노드 ID
+        errorPayload.put("errorMessage", e.getMessage());
+
+        if(originalMessage != null){
+            errorPayload.put("originalMessage", originalMessage);
+        }
+        send("error", new Message(errorPayload));
     }
 
     @Override

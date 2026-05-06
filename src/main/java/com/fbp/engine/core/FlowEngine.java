@@ -1,14 +1,14 @@
 package com.fbp.engine.core;
 
 import com.fbp.engine.core.Flow.FlowState;
+import com.fbp.engine.engine.ThreadPoolConfig;
 import com.fbp.engine.message.Message;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,9 +27,10 @@ public class FlowEngine {
     private State state;
 
     public FlowEngine() {
-        this.flows = new HashMap<>();
+        ThreadPoolConfig config = new ThreadPoolConfig();
+        this.executor = config.createExecutor();
+        this.flows = new ConcurrentHashMap<>();
         this.state = State.INITIALIZED;
-        this.executor = Executors.newCachedThreadPool();
     }
 
     /**
