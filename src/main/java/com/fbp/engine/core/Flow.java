@@ -66,6 +66,18 @@ public class Flow {
     }
 
     /**
+     * 런타인에 노드와 연결을 안전하게 제거
+     * 동적 제거 로직 (Part C)
+     * @param nodeId
+     */
+    public void removeNode(String nodeId){
+        AbstractNode node = nodes.remove(nodeId);
+        if(node!=null){
+            node.shutdown();
+        }
+    }
+
+    /**
      * connection 생성
      * @param conn FlowManager에서 넣어주는 connection
      * @param sourceNodeId 출발지 노드 아이디
@@ -114,6 +126,27 @@ public class Flow {
 
         // 생성한 커넥션을 1번 메서드로 넘겨서 로직 재사용 (중복 제거!)
         return connect(conn, sourceNodeId, sourcePort, targetNodeId, targetPort);
+    }
+
+    /**
+     * Connection 삭제
+     * @param connId 삭제할 커넥션 아이다
+     */
+
+    public void removeConnection(String connId){
+        Connection targetConn = connections.stream()
+                .filter(c-> c.getId().equalsIgnoreCase(connId))
+                .findFirst()
+                .orElse(null);
+        if(targetConn != null){
+            for(AbstractNode node : nodes.values()){
+                for(String portName: node.getOutputPorts().keySet()){
+                    node.getOutputPort(portName).disconnect(targetConn);
+                }
+            }
+            targetConn.close();
+            connections.remove(targetConn);
+        }
     }
 
     /**

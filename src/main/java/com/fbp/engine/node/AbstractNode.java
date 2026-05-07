@@ -29,7 +29,9 @@ public abstract class AbstractNode implements Node{
         this.outputPorts.put("error", new ErrorPort());
     }
 
+    @Getter
     private final Map<String, InputPort> inputPorts = new HashMap<>();
+    @Getter
     private final Map<String, OutputPort> outputPorts = new HashMap<>();
 
     protected void addInputPort(String name){

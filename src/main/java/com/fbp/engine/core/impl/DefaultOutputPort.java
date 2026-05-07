@@ -30,4 +30,9 @@ public class DefaultOutputPort implements OutputPort {
             conn.deliver(message);
         }
     }
+
+    @Override
+    public void disconnect(Connection connection) {
+        connections.remove(connection);
+    }
 }
