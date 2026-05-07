@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ class DelayNodeTest {
     void testDelayDelivery() throws InterruptedException {
         long delay = 500;
         DelayNode delayer = new DelayNode("delay", delay);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         delayer.getOutputPort("out").connect(conn);
 
         Message msg = new Message(new HashMap<>());
@@ -34,7 +34,7 @@ class DelayNodeTest {
     @Test
     void testMessageContentPreserved() {
         DelayNode delayer = new DelayNode("delay", 100);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         delayer.getOutputPort("out").connect(conn);
 
         Map<String, Object> data = new HashMap<>();

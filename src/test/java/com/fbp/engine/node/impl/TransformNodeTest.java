@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ class TransformNodeTest {
             Integer val = msg.get("val");
             return msg.withEntry("val", val * 2);
         });
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         transformer.getOutputPort("out").connect(conn);
 
         Map<String, Object> data = new HashMap<>();
@@ -35,7 +35,7 @@ class TransformNodeTest {
     @Test
     void testTransformNullReturnsNothing() {
         TransformNode transformer = new TransformNode("trans", msg -> null);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         transformer.getOutputPort("out").connect(conn);
 
         transformer.process(new Message(new HashMap<>()));

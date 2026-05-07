@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ class FilterNodeStep3Test {
     @DisplayName("조건 만족 시 통과")
     void testPassCondition() {
         FilterNode filter = new FilterNode("filter", "val", 10.0);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         filter.getOutputPort("out").connect(conn);
 
         Map<String, Object> data = new HashMap<>();
@@ -34,7 +34,7 @@ class FilterNodeStep3Test {
     @DisplayName("조건 미달 시 차단")
     void testBlockCondition() {
         FilterNode filter = new FilterNode("filter", "val", 10.0);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         filter.getOutputPort("out").connect(conn);
 
         Map<String, Object> data = new HashMap<>();
@@ -50,7 +50,7 @@ class FilterNodeStep3Test {
     @DisplayName("경계값 처리")
     void testBoundaryCondition() {
         FilterNode filter = new FilterNode("filter", "val", 10.0);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         filter.getOutputPort("out").connect(conn);
 
         Map<String, Object> data = new HashMap<>();
@@ -66,7 +66,7 @@ class FilterNodeStep3Test {
     @DisplayName("키 없는 메시지")
     void testMissingKey() {
         FilterNode filter = new FilterNode("filter", "val", 10.0);
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         filter.getOutputPort("out").connect(conn);
 
         Map<String, Object> data = new HashMap<>();

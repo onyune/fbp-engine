@@ -3,7 +3,7 @@ package com.fbp.engine.node.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ class CounterNodeTest {
     @DisplayName("count 키 추가")
     void testAddCountKey() throws InterruptedException {
         CounterNode counter = new CounterNode("counter");
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         counter.getOutputPort("out").connect(conn);
 
         counter.initialize();
@@ -33,7 +33,7 @@ class CounterNodeTest {
     @DisplayName("count 누적")
     void testAccumulateCount() throws InterruptedException {
         CounterNode counter = new CounterNode("counter");
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         counter.getOutputPort("out").connect(conn);
 
         counter.initialize();
@@ -55,7 +55,7 @@ class CounterNodeTest {
     @DisplayName("원본 키 유지")
     void testMaintainOriginalKeys() throws InterruptedException {
         CounterNode counter = new CounterNode("counter");
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         counter.getOutputPort("out").connect(conn);
 
         counter.initialize();

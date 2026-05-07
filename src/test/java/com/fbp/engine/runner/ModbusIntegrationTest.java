@@ -3,7 +3,7 @@ package com.fbp.engine.runner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.core.Flow;
 import com.fbp.engine.core.FlowEngine;
 import com.fbp.engine.message.Message;
@@ -224,7 +224,7 @@ class ModbusIntegrationTest {
         flow.addNode(timer).addNode(reader).addNode(errorCollector)
                 .connect(timer.getId(), "out", reader.getId(), "trigger");
 
-        Connection errorConn = new Connection("error-conn");
+        LocalConnection errorConn = new LocalConnection("error-conn");
         errorConn.setTarget(errorCollector.getInputPort("in"));
         reader.getOutputPort("error").connect(errorConn);
         flow.getConnections().add(errorConn);

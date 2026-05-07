@@ -2,7 +2,7 @@ package com.fbp.engine.node.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,7 @@ class HumiditySensorNodeTest {
     @DisplayName("습도 범위 확인")
     void checkHumidity(){
         HumiditySensorNode sensor = new HumiditySensorNode("humidity", 30, 90);
-        Connection connection = new Connection("outConn");
+        LocalConnection connection = new LocalConnection("outConn");
         sensor.getOutputPort("out").connect(connection);
 
         for(int i = 0 ; i<100;i++){
@@ -34,7 +34,7 @@ class HumiditySensorNodeTest {
     @DisplayName("필수 키 포함")
     void containPrimaryKey(){
         HumiditySensorNode sensor = new HumiditySensorNode("humidity", 30, 90);
-        Connection connection = new Connection("outConn");
+        LocalConnection connection = new LocalConnection("outConn");
         sensor.getOutputPort("out").connect(connection);
         sensor.onProcess(new Message(new HashMap<>()));
         Message outMsg = connection.poll();
@@ -49,7 +49,7 @@ class HumiditySensorNodeTest {
     @DisplayName("sensorId 일치")
     void equalSensorIdAndNodeId(){
         HumiditySensorNode sensor = new HumiditySensorNode("humidity", 30, 90);
-        Connection connection = new Connection("outConn");
+        LocalConnection connection = new LocalConnection("outConn");
         sensor.getOutputPort("out").connect(connection);
         sensor.onProcess(new Message(new HashMap<>()));
         Message outMsg = connection.poll();
@@ -63,7 +63,7 @@ class HumiditySensorNodeTest {
     @DisplayName("트리거마다 생성")
     void createByTrigger(){
         HumiditySensorNode sensor = new HumiditySensorNode("humidity", 30, 90);
-        Connection connection = new Connection("outConn");
+        LocalConnection connection = new LocalConnection("outConn");
         sensor.getOutputPort("out").connect(connection);
 
         sensor.onProcess(new Message(new HashMap<>()));

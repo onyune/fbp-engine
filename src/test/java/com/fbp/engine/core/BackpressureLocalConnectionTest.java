@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class BackpressureConnectionTest {
+class BackpressureLocalConnectionTest {
 
     @Test
     @DisplayName("1. Block 전략: 큐 가득 참 → send()가 블로킹됨 (타임아웃으로 확인)")

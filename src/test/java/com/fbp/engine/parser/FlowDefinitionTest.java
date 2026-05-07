@@ -18,9 +18,11 @@ class FlowDefinitionTest {
     void testImmutability() {
         NodeDefinition n1 = new NodeDefinition("n1", "TypeA", Map.of());
         NodeDefinition n2 = new NodeDefinition("n2", "TypeB", Map.of());
+        TransportDefinition transportDefinition = new TransportDefinition("transport", "tcp:brokerurl", 2);
+
         ConnectionDefinition conn = new ConnectionDefinition("n1", "out", "n2", "in");
 
-        FlowDefinition def = new FlowDefinition("flow-1", "Test", "Desc", List.of(n1, n2), List.of(conn));
+        FlowDefinition def = new FlowDefinition("flow-1", "Test", "Desc",transportDefinition, List.of(n1, n2), List.of(conn));
 
         assertThrows(UnsupportedOperationException.class, () -> def.nodes().add(new NodeDefinition("n3", "TypeC", Map.of())));
         assertThrows(UnsupportedOperationException.class, () -> def.connections().clear());
@@ -31,8 +33,9 @@ class FlowDefinitionTest {
     void testGetNode() {
         NodeDefinition n1 = new NodeDefinition("n1", "TypeA", Map.of());
         NodeDefinition n2 = new NodeDefinition("n2", "TypeB", Map.of());
+        TransportDefinition transportDefinition = new TransportDefinition("transport", "tcp:brokerurl", 2);
 
-        FlowDefinition def = new FlowDefinition("flow-2", "Test", "Desc", List.of(n1, n2), List.of());
+        FlowDefinition def = new FlowDefinition("flow-2", "Test", "Desc",transportDefinition, List.of(n1, n2), List.of());
 
         NodeDefinition found = def.getNode("n2");
         assertNotNull(found);
@@ -46,9 +49,10 @@ class FlowDefinitionTest {
     void testInvalidSourceConnection() {
         NodeDefinition n2 = new NodeDefinition("n2", "TypeB", Map.of());
         ConnectionDefinition conn = new ConnectionDefinition("ghost", "out", "n2", "in");
+        TransportDefinition transportDefinition = new TransportDefinition("transport", "tcp:brokerurl", 2);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new FlowDefinition("flow-3", "Test", "Desc", List.of(n2), List.of(conn));
+            new FlowDefinition("flow-3", "Test", "Desc", transportDefinition,List.of(n2), List.of(conn));
         });
     }
 
@@ -57,9 +61,10 @@ class FlowDefinitionTest {
     void testInvalidTargetConnection() {
         NodeDefinition n1 = new NodeDefinition("n1", "TypeA", Map.of());
         ConnectionDefinition conn = new ConnectionDefinition("n1", "out", "ghost", "in");
+        TransportDefinition transportDefinition = new TransportDefinition("transport", "tcp:brokerurl", 2);
 
         assertThrows(IllegalArgumentException.class, () -> {
-            new FlowDefinition("flow-4", "Test", "Desc", List.of(n1), List.of(conn));
+            new FlowDefinition("flow-4", "Test", "Desc",transportDefinition, List.of(n1), List.of(conn));
         });
     }
 
@@ -68,8 +73,9 @@ class FlowDefinitionTest {
     void testOriginalListModification() {
         List<NodeDefinition> mutableNodes = new ArrayList<>();
         mutableNodes.add(new NodeDefinition("n1", "TypeA", Map.of()));
+        TransportDefinition transportDefinition = new TransportDefinition("transport", "tcp:brokerurl", 2);
 
-        FlowDefinition def = new FlowDefinition("flow-mut", "", "", mutableNodes, List.of());
+        FlowDefinition def = new FlowDefinition("flow-mut", "", "", transportDefinition,mutableNodes, List.of());
 
         mutableNodes.add(new NodeDefinition("n2", "TypeB", Map.of()));
         assertEquals(1, def.nodes().size());

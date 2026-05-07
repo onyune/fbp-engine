@@ -1,5 +1,6 @@
 package com.fbp.engine.core;
 
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -7,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import lombok.Getter;
 import lombok.Setter;
 
-public class BackpressureConnection extends Connection{
+public class BackpressureConnection extends LocalConnection {
     @Getter
     private final BlockingQueue<Message> queue;
     @Getter @Setter

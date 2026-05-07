@@ -8,7 +8,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.RoutingRule;
@@ -37,7 +37,7 @@ class DynamicRouterNodeTest {
         OutputPort tempPort = routerNode.getOutputPort("tempPort");
         assertNotNull(tempPort, "addRule 호출 시 타겟 포트가 자동 생성되어야 합니다.");
 
-        Connection mockConnection = mock(Connection.class);
+        LocalConnection mockConnection = mock(LocalConnection.class);
         tempPort.connect(mockConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -54,10 +54,10 @@ class DynamicRouterNodeTest {
         routerNode.addRule(new RoutingRule("val", ">", 50, "highPort"));
         routerNode.addRule(new RoutingRule("val", ">", 20, "midPort"));
 
-        Connection mockMidConnection = mock(Connection.class);
+        LocalConnection mockMidConnection = mock(LocalConnection.class);
         routerNode.getOutputPort("midPort").connect(mockMidConnection);
 
-        Connection mockHighConnection = mock(Connection.class);
+        LocalConnection mockHighConnection = mock(LocalConnection.class);
         routerNode.getOutputPort("highPort").connect(mockHighConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -75,7 +75,7 @@ class DynamicRouterNodeTest {
     void testDefaultPort() {
         routerNode.addRule(new RoutingRule("type", "==", "temp", "tempPort"));
 
-        Connection mockDefaultConnection = mock(Connection.class);
+        LocalConnection mockDefaultConnection = mock(LocalConnection.class);
         routerNode.getOutputPort("default").connect(mockDefaultConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -90,7 +90,7 @@ class DynamicRouterNodeTest {
     @Test
     @DisplayName("규칙 없음: 룰이 하나도 없으면 무조건 default 포트로 전송되어야 한다")
     void testNoRules() {
-        Connection mockDefaultConnection = mock(Connection.class);
+        LocalConnection mockDefaultConnection = mock(LocalConnection.class);
         routerNode.getOutputPort("default").connect(mockDefaultConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -107,7 +107,7 @@ class DynamicRouterNodeTest {
     void testNullField() {
         routerNode.addRule(new RoutingRule("missing", "==", "val", "targetPort"));
 
-        Connection mockDefaultConnection = mock(Connection.class);
+        LocalConnection mockDefaultConnection = mock(LocalConnection.class);
         routerNode.getOutputPort("default").connect(mockDefaultConnection);
 
         Map<String, Object> payload = new HashMap<>();

@@ -3,7 +3,7 @@ package com.fbp.engine.node.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ class SplitNodeTest {
     @Test
     void testSplitMatch() {
         SplitNode splitter = new SplitNode("split", "val", 10.0);
-        Connection matchConn = new Connection("match");
+        LocalConnection matchConn = new LocalConnection("match");
         splitter.getOutputPort("match").connect(matchConn);
 
         Map<String, Object> data = new HashMap<>();
@@ -27,7 +27,7 @@ class SplitNodeTest {
     @Test
     void testSplitMismatch() {
         SplitNode splitter = new SplitNode("split", "val", 10.0);
-        Connection mismatchConn = new Connection("mismatch");
+        LocalConnection mismatchConn = new LocalConnection("mismatch");
         splitter.getOutputPort("mismatch").connect(mismatchConn);
 
         Map<String, Object> data = new HashMap<>();
@@ -40,8 +40,8 @@ class SplitNodeTest {
     @Test
     void testSplitBothDirections() {
         SplitNode splitter = new SplitNode("split", "val", 10.0);
-        Connection matchConn = new Connection("m1");
-        Connection mismatchConn = new Connection("m2");
+        LocalConnection matchConn = new LocalConnection("m1");
+        LocalConnection mismatchConn = new LocalConnection("m2");
         splitter.getOutputPort("match").connect(matchConn);
         splitter.getOutputPort("mismatch").connect(mismatchConn);
 
@@ -58,7 +58,7 @@ class SplitNodeTest {
     @Test
     void testBoundaryValue() {
         SplitNode splitter = new SplitNode("split", "val", 10.0);
-        Connection matchConn = new Connection("m1");
+        LocalConnection matchConn = new LocalConnection("m1");
         splitter.getOutputPort("match").connect(matchConn);
 
         Map<String, Object> data = new HashMap<>();

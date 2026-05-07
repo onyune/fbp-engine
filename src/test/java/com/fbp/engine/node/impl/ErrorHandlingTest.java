@@ -9,7 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.core.impl.ErrorPort;
 import com.fbp.engine.message.Message;
@@ -41,7 +41,7 @@ class ErrorHandlingTest {
         node.setFlowId("test-flow");
 
         OutputPort errorPort = node.getOutputPort("error");
-        Connection mockConnection = mock(Connection.class);
+        LocalConnection mockConnection = mock(LocalConnection.class);
         errorPort.connect(mockConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -59,7 +59,7 @@ class ErrorHandlingTest {
         node.setFlowId("test-flow");
 
         OutputPort errorPort = node.getOutputPort("error");
-        Connection mockConnection = mock(Connection.class);
+        LocalConnection mockConnection = mock(LocalConnection.class);
         errorPort.connect(mockConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -96,7 +96,7 @@ class ErrorHandlingTest {
         node.setFlowId("test-flow");
 
         OutputPort errorPort = node.getOutputPort("error");
-        Connection mockConnection = mock(Connection.class);
+        LocalConnection mockConnection = mock(LocalConnection.class);
         errorPort.connect(mockConnection);
 
         Map<String, Object> payload = new HashMap<>();
@@ -114,7 +114,7 @@ class ErrorHandlingTest {
         handler.setFlowId("test-flow");
 
         OutputPort outPort = handler.getOutputPort("out");
-        Connection mockConnection = mock(Connection.class);
+        LocalConnection mockConnection = mock(LocalConnection.class);
         outPort.connect(mockConnection);
 
         Map<String, Object> errorPayload = new HashMap<>();

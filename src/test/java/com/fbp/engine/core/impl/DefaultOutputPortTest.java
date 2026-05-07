@@ -3,7 +3,6 @@ package com.fbp.engine.core.impl;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fbp.engine.core.Connection;
 import com.fbp.engine.core.OutputPort;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ class DefaultOutputPortTest {
     @DisplayName("단일 Connection 전달")
     void singleConnection(){
         OutputPort outputPort = new DefaultOutputPort("out");
-        Connection conn1 = new Connection("conn-1");
+        LocalConnection conn1 = new LocalConnection("conn-1");
         outputPort.connect(conn1);
 
         Map<String, Object> data = new HashMap<>();
@@ -31,8 +30,8 @@ class DefaultOutputPortTest {
     @DisplayName("다중 Connection 전달")
     void multiConnections(){
         OutputPort outputPort = new DefaultOutputPort("out");
-        Connection conn1 = new Connection("conn-1");
-        Connection conn2 = new Connection("conn-2");
+        LocalConnection conn1 = new LocalConnection("conn-1");
+        LocalConnection conn2 = new LocalConnection("conn-2");
         outputPort.connect(conn1);
         outputPort.connect(conn2);
 

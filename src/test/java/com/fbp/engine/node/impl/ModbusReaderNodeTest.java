@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.ConnectionState;
 import com.fbp.engine.protocol.ModbusTcpSimulator;
@@ -115,7 +115,7 @@ class ModbusReaderNodeTest {
             ModbusReaderNode node = new ModbusReaderNode("reader", config);
             CollectorNode collector = new CollectorNode("collector");
 
-            Connection connection = new Connection("outToIn");
+            LocalConnection connection = new LocalConnection("outToIn");
             connection.setTarget(collector.getInputPort("in"));
             node.getOutputPort("out").connect(connection);
 
@@ -155,7 +155,7 @@ class ModbusReaderNodeTest {
             ModbusReaderNode node = new ModbusReaderNode("reader", config);
             CollectorNode collector = new CollectorNode("collector");
 
-            Connection connection = new Connection("outToIn");
+            LocalConnection connection = new LocalConnection("outToIn");
             connection.setTarget(collector.getInputPort("in"));
             node.getOutputPort("out").connect(connection);
 
@@ -187,7 +187,7 @@ class ModbusReaderNodeTest {
             ModbusReaderNode node = new ModbusReaderNode("reader", config);
             CollectorNode errorCollector = new CollectorNode("errorCollector");
 
-            Connection errorConnection = new Connection("errorToIn");
+            LocalConnection errorConnection = new LocalConnection("errorToIn");
             errorConnection.setTarget(errorCollector.getInputPort("in"));
             node.getOutputPort("error").connect(errorConnection);
 

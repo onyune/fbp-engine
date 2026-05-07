@@ -2,7 +2,7 @@ package com.fbp.engine.node.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,18 +14,18 @@ class CompositeRuleNodeTest {
 
     private CollectorNode matchCollector;
     private CollectorNode mismatchCollector;
-    private Connection matchConnection;
-    private Connection mismatchConnection;
+    private LocalConnection matchConnection;
+    private LocalConnection mismatchConnection;
 
     @BeforeEach
     void setUp() {
         matchCollector = new CollectorNode("match-collector");
         mismatchCollector = new CollectorNode("mismatch-collector");
 
-        matchConnection = new Connection("toMatch");
+        matchConnection = new LocalConnection("toMatch");
         matchConnection.setTarget(matchCollector.getInputPort("in"));
 
-        mismatchConnection = new Connection("toMismatch");
+        mismatchConnection = new LocalConnection("toMismatch");
         mismatchConnection.setTarget(mismatchCollector.getInputPort("in"));
     }
 

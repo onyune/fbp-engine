@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +68,7 @@ class CollectorNodeTest {
     void testPipelineConnection() {
         GeneratorNode generator = new GeneratorNode("gen-1");
         CollectorNode collector = new CollectorNode("collector-1");
-        Connection conn = new Connection("testConn");
+        LocalConnection conn = new LocalConnection("testConn");
 
         generator.getOutputPort("out").connect(conn);
 

@@ -1,5 +1,6 @@
 package com.fbp.engine.core;
 
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.node.AbstractNode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,9 +65,38 @@ public class Flow {
         return this;
     }
 
-
     /**
      * connection 생성
+     * @param conn FlowManager에서 넣어주는 connection
+     * @param sourceNodeId 출발지 노드 아이디
+     * @param sourcePort   출발지 포트 (out)
+     * @param targetNodeId 도착지 노드 아이디
+     * @param targetPort   도착지 포트 (in)
+     * @return 메서드 체이닝 지원으로 this 호출 flow.connect("timer", "out", "filter", "in") .connect("filter", "out", "printer",
+     * "in");
+     */
+    public Flow connect(Connection conn, String sourceNodeId, String sourcePort, String targetNodeId, String targetPort) {
+        AbstractNode sourceNode = nodes.get(sourceNodeId);
+        AbstractNode targetNode = nodes.get(targetNodeId);
+
+        if (Objects.isNull(sourceNode)) throw new IllegalArgumentException("sourceNode가 null 입니다.(ID:" + sourceNodeId + ")");
+        if (Objects.isNull(targetNode)) throw new IllegalArgumentException("targetNode가 null 입니다.(ID:" + targetNodeId + ")");
+
+        OutputPort outPort = sourceNode.getOutputPort(sourcePort);
+        InputPort inPort = targetNode.getInputPort(targetPort);
+
+        if (Objects.isNull(outPort)) throw new IllegalArgumentException("sourcePort가 null 입니다.(ID:" + sourcePort + ")");
+        if (Objects.isNull(inPort)) throw new IllegalArgumentException("targetPort가 null 입니다.(ID:" + targetPort + ")");
+
+        outPort.connect(conn);
+        conn.setTarget(inPort);
+        connections.add(conn);
+
+        return this;
+    }
+
+    /**
+     * connection 생성 (Test호환용)
      *
      * @param sourceNodeId 출발지 노드 아이디
      * @param sourcePort   출발지 포트 (out)
@@ -76,46 +106,14 @@ public class Flow {
      * "in");
      */
     public Flow connect(String sourceNodeId, String sourcePort, String targetNodeId, String targetPort) {
-        //node
-        AbstractNode sourceNode = nodes.get(sourceNodeId);
-        AbstractNode targetNode = nodes.get(targetNodeId);
-
-        //node validation
-        if (Objects.isNull(sourceNode)) {
-            throw new IllegalArgumentException("sourceNode가 null 입니다.(ID:" + sourceNodeId + ")");
-        }
-        if (Objects.isNull(targetNode)) {
-            throw new IllegalArgumentException("targetNode가 null 입니다.(ID:" + targetNodeId + ")");
-        }
-
-        //port
-        OutputPort outPort = sourceNode.getOutputPort(sourcePort);
-        InputPort inPort = targetNode.getInputPort(targetPort);
-
-        //Port validation
-        if (Objects.isNull(outPort)) {
-            throw new IllegalArgumentException("sourcePort가 null 입니다.(ID:" + sourcePort + ")");
-        }
-        if (Objects.isNull(inPort)) {
-            throw new IllegalArgumentException("targetPort가 null 입니다.(ID:" + targetPort + ")");
-        }
-
-        //1. Connection Id: "소스ID:포트->대상ID:포트" 형식
+        // Connection Id: "소스ID:포트->대상ID:포트" 형식 포맷팅
         String connId = String.format("%s:%s->%s:%s", sourceNodeId, sourcePort, targetNodeId, targetPort);
 
-        //2. Connection 생성
-        Connection conn = new Connection(connId);
+        // LocalConnection 생성
+        Connection conn = new LocalConnection(connId);
 
-        //3. outputPort -> Connection
-        outPort.connect(conn);
-
-        //4. Connection -> InputPort
-        conn.setTarget(inPort);
-
-        //5. 연결이 설정된 Connection을 connection List에 추가해둠!
-        connections.add(conn);
-
-        return this;
+        // 생성한 커넥션을 1번 메서드로 넘겨서 로직 재사용 (중복 제거!)
+        return connect(conn, sourceNodeId, sourcePort, targetNodeId, targetPort);
     }
 
     /**
@@ -134,6 +132,10 @@ public class Flow {
     public void shutdown() {
         for (AbstractNode an : nodes.values()) {
             an.shutdown();
+        }
+
+        for(Connection conn : connections){
+            conn.close();
         }
         this.state=FlowState.STOPPED;
     }

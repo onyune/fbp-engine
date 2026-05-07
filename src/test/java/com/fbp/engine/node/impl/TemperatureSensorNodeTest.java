@@ -2,7 +2,7 @@ package com.fbp.engine.node.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,12 +11,12 @@ import org.junit.jupiter.api.Test;
 
 class TemperatureSensorNodeTest {
     TemperatureSensorNode sensor;
-    Connection outConn;
+    LocalConnection outConn;
 
     @BeforeEach
     void setUp(){
         sensor = new TemperatureSensorNode("temperature", 0, 50);
-        outConn = new Connection("outConn");
+        outConn = new LocalConnection("outConn");
         sensor.getOutputPort("out").connect(outConn);
     }
 

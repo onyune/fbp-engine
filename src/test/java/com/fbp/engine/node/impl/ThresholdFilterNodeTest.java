@@ -2,7 +2,7 @@ package com.fbp.engine.node.impl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,14 +12,14 @@ import org.junit.jupiter.api.Test;
 
 class ThresholdFilterNodeTest {
     ThresholdFilterNode node;
-    Connection alertConn;
-    Connection normalConn;
+    LocalConnection alertConn;
+    LocalConnection normalConn;
 
     @BeforeEach
     void setUp(){
         node = new ThresholdFilterNode("filter-1", "temperature", 30.0);
-        alertConn = new Connection("alertConn");
-        normalConn = new Connection("normalConn");
+        alertConn = new LocalConnection("alertConn");
+        normalConn = new LocalConnection("normalConn");
 
         node.getOutputPort("alert").connect(alertConn);
         node.getOutputPort("normal").connect(normalConn);
@@ -88,8 +88,8 @@ class ThresholdFilterNodeTest {
         CollectorNode alertCollector = new CollectorNode("alertCollector");
         CollectorNode normalCollector = new CollectorNode("normalCollector");
 
-        Connection alertConn = new Connection("alertConn");
-        Connection normalConn = new Connection("normalConn");
+        LocalConnection alertConn = new LocalConnection("alertConn");
+        LocalConnection normalConn = new LocalConnection("normalConn");
 
         node.getOutputPort("alert").connect(alertConn);
         node.getOutputPort("normal").connect(normalConn);

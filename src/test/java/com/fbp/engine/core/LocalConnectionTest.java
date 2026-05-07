@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +13,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 
-class ConnectionTest {
+class LocalConnectionTest {
 
     @Test
     void testDeliverAndPoll() {
-        Connection conn = new Connection("test-conn");
+        LocalConnection conn = new LocalConnection("test-conn");
         Message msg = new Message(new HashMap<>());
 
         conn.deliver(msg);
@@ -25,7 +26,7 @@ class ConnectionTest {
 
     @Test
     void testMessageOrder() {
-        Connection conn = new Connection("test-conn");
+        LocalConnection conn = new LocalConnection("test-conn");
 
         Map<String, Object> d1 = new HashMap<>(); d1.put("seq", 1);
         Map<String, Object> d2 = new HashMap<>(); d2.put("seq", 2);
@@ -46,7 +47,7 @@ class ConnectionTest {
 
     @Test
     void testMultiThreadAndPollBlocking() throws InterruptedException {
-        Connection conn = new Connection("test-conn");
+        LocalConnection conn = new LocalConnection("test-conn");
         Message targetMsg = new Message(new HashMap<>());
 
         AtomicReference<Message> receivedMsg = new AtomicReference<>();
@@ -69,7 +70,7 @@ class ConnectionTest {
 
     @Test
     void testBufferCapacityBlocking() throws InterruptedException {
-        Connection conn = new Connection("test-conn", 2);
+        LocalConnection conn = new LocalConnection("test-conn", 2);
 
         conn.deliver(new Message(new HashMap<>()));
         conn.deliver(new Message(new HashMap<>()));
@@ -89,7 +90,7 @@ class ConnectionTest {
 
     @Test
     void testBufferSize() {
-        Connection conn = new Connection("test-conn", 10);
+        LocalConnection conn = new LocalConnection("test-conn", 10);
         conn.deliver(new Message(new HashMap<>()));
         conn.deliver(new Message(new HashMap<>()));
 

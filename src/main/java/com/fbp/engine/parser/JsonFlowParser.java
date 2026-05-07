@@ -30,6 +30,14 @@ public class JsonFlowParser implements FlowParser{
             String name = rootNode.hasNonNull("name")? rootNode.get("name").asText() : "";
             String description = rootNode.hasNonNull("description") ? rootNode.get("description").asText() : "";
 
+            TransportDefinition transportDef = null;
+            if(rootNode.hasNonNull("transport")){
+                JsonNode transportNode = rootNode.get("transport");
+                String tType = transportNode.hasNonNull("type") ? transportNode.get("type").asText() : null;
+                String tBroker = transportNode.hasNonNull("broker") ? transportNode.get("broker").asText() : null;
+                Integer tQos = transportNode.hasNonNull("qos") ? transportNode.get("qos").asInt() : null;
+                transportDef = new TransportDefinition(tType,tBroker,tQos);
+            }
             List<NodeDefinition> nodeDefs = new ArrayList<>();
             for(JsonNode node : rootNode.get("nodes")){
                 if(!node.hasNonNull("id") || !node.hasNonNull("type")){
@@ -74,7 +82,7 @@ public class JsonFlowParser implements FlowParser{
                     ));
                 }
             }
-            return new FlowDefinition(flowId, name, description, nodeDefs, connDefs);
+            return new FlowDefinition(flowId, name, description,transportDef, nodeDefs, connDefs);
         }catch (FlowParserException e){
             throw e;
         } catch (Exception e) {

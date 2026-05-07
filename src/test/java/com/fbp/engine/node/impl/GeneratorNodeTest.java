@@ -3,7 +3,7 @@ package com.fbp.engine.node.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class GeneratorNodeTest {
     @DisplayName("generate 메시지 생성")
     void testGenerateMessage() {
         GeneratorNode gen = new GeneratorNode("gen");
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         gen.getOutputPort("out").connect(conn);
 
         gen.generate("key", "value");
@@ -35,7 +35,7 @@ class GeneratorNodeTest {
     @DisplayName("메시지 내용 확인")
     void testMessageContent() {
         GeneratorNode gen = new GeneratorNode("gen");
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         gen.getOutputPort("out").connect(conn);
 
         gen.generate("key1", "value1");
@@ -49,7 +49,7 @@ class GeneratorNodeTest {
     @DisplayName("다수 generate 호출")
     void testMultipleGenerates() {
         GeneratorNode gen = new GeneratorNode("gen");
-        Connection conn = new Connection("c1");
+        LocalConnection conn = new LocalConnection("c1");
         gen.getOutputPort("out").connect(conn);
 
         gen.generate("seq", 1);

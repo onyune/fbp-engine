@@ -2,7 +2,7 @@ package com.fbp.engine.node.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,18 +14,18 @@ class TimeWindowRuleNodeTest {
 
     private CollectorNode alertCollector;
     private CollectorNode passCollector;
-    private Connection alertConnection;
-    private Connection passConnection;
+    private LocalConnection alertConnection;
+    private LocalConnection passConnection;
 
     @BeforeEach
     void setUp() {
         alertCollector = new CollectorNode("alert-collector");
         passCollector = new CollectorNode("pass-collector");
 
-        alertConnection = new Connection("toAlert");
+        alertConnection = new LocalConnection("toAlert");
         alertConnection.setTarget(alertCollector.getInputPort("in"));
 
-        passConnection = new Connection("toPass");
+        passConnection = new LocalConnection("toPass");
         passConnection.setTarget(passCollector.getInputPort("in"));
     }
 

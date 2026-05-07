@@ -8,6 +8,7 @@ public record FlowDefinition(
         String id,
         String name,
         String description,
+        TransportDefinition transport,
         List<NodeDefinition> nodes,
         List<ConnectionDefinition> connections
 ) {

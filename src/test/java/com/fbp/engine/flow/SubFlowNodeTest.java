@@ -9,7 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.core.Flow;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
@@ -41,7 +41,7 @@ class SubFlowNodeTest {
         SubFlowNode subFlow = new SubFlowNode("sub", innerFlow, "entry");
         innerFlow.connect("entry", "out", subFlow.getBridgeNodeId(), "in");
 
-        Connection mockConn = mock(Connection.class);
+        LocalConnection mockConn = mock(LocalConnection.class);
         subFlow.getOutputPort("out").connect(mockConn);
 
         subFlow.initialize();
@@ -64,7 +64,7 @@ class SubFlowNodeTest {
         SubFlowNode subFlow = new SubFlowNode("sub", innerFlow, "entry");
         innerFlow.connect("next", "out", subFlow.getBridgeNodeId(), "in");
 
-        Connection mockConn = mock(Connection.class);
+        LocalConnection mockConn = mock(LocalConnection.class);
         subFlow.getOutputPort("out").connect(mockConn);
 
         subFlow.initialize();
@@ -128,7 +128,7 @@ class SubFlowNodeTest {
 
         SubFlowNode errorSubFlow = new SubFlowNode("subflow-error", errorFlow, "error-node");
 
-        Connection mockErrorConn = mock(Connection.class);
+        LocalConnection mockErrorConn = mock(LocalConnection.class);
         errorSubFlow.getOutputPort("error").connect(mockErrorConn);
 
         errorSubFlow.initialize();

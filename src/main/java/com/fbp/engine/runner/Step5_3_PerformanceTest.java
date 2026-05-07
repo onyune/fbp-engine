@@ -5,7 +5,6 @@ import com.fbp.engine.core.Flow;
 import com.fbp.engine.core.FlowEngine;
 import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;

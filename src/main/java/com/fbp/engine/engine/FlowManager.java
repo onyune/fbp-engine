@@ -1,18 +1,25 @@
 package com.fbp.engine.engine;
 
+import com.fbp.engine.core.Connection;
 import com.fbp.engine.core.Flow;
 import com.fbp.engine.core.FlowEngine;
+import com.fbp.engine.core.impl.JsonMessageSerializer;
+import com.fbp.engine.core.impl.LocalConnection;
+import com.fbp.engine.core.impl.MqttBridgeConnection;
 import com.fbp.engine.node.AbstractNode;
 import com.fbp.engine.node.Node;
 import com.fbp.engine.parser.ConnectionDefinition;
 import com.fbp.engine.parser.FlowDefinition;
 import com.fbp.engine.parser.NodeDefinition;
+import com.fbp.engine.parser.TransportDefinition;
 import com.fbp.engine.registry.NodeRegistry;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class FlowManager {
     private final NodeRegistry nodeRegistry;
     private final FlowEngine flowEngine;
@@ -49,13 +56,34 @@ public class FlowManager {
             flow.addNode(absNode);
             createdNodes.put(nodeDef.id(), absNode);
         }
-
+        TransportDefinition transportDef = definition.transport();
         // 3. 포트 연결 (Wire-up)
         for (ConnectionDefinition connDef : definition.connections()) {
             if (!createdNodes.containsKey(connDef.sourceId()) || !createdNodes.containsKey(connDef.targetId())) {
                 throw new IllegalArgumentException("연결할 노드를 찾을 수 없습니다: " + connDef.sourceId() + " -> " + connDef.targetId());
             }
-            flow.connect(connDef.sourceId(), connDef.sourcePort(), connDef.targetId(), connDef.targetPort());
+            String connId = String.format("%s:%s->%s:%s", connDef.sourceId(),connDef.sourcePort(), connDef.targetId(), connDef.targetPort());
+            Connection connection;
+
+            if(transportDef != null && "mqtt".equalsIgnoreCase(transportDef.type())){
+                String topic = String.format("fbp/%s/%s.%s->%s.%s",
+                        definition.id(),
+                        connDef.sourceId(), connDef.sourcePort(),
+                        connDef.targetId(), connDef.targetPort());
+                int qos = (transportDef.qos() != null ) ? transportDef.qos() : null ;
+                connection = new MqttBridgeConnection(
+                        connId,
+                        transportDef.broker(),
+                        topic,
+                        new JsonMessageSerializer(),
+                        qos
+                );
+                log.info("[FlowManager] MQTT 브릿지 연결 생성 - 토픽: {}", topic);
+            }else{
+                connection = new LocalConnection(connId);
+                log.info("[FlowManager] 로컬 연결 생성 - {}", connId);
+            }
+            flow.connect(connection,connDef.sourceId(), connDef.sourcePort(), connDef.targetId(), connDef.targetPort());
         }
 
         // 4. FlowEngine에 위임 (등록 및 실행)

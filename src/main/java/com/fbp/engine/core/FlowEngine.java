@@ -1,6 +1,7 @@
 package com.fbp.engine.core;
 
 import com.fbp.engine.core.Flow.FlowState;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.engine.ThreadPoolConfig;
 import com.fbp.engine.message.Message;
 import java.util.List;

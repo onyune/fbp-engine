@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.fbp.engine.core.Connection;
+import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.message.Message;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 
 class MergeNodeTest {
     MergeNode mergeNode;
-    Connection outConn;
+    LocalConnection outConn;
 
     @BeforeEach
     void setUp(){
         mergeNode=new MergeNode("merge-1");
-        outConn = new Connection("outConn");
+        outConn = new LocalConnection("outConn");
 
         mergeNode.getOutputPort("out").connect(outConn);
     }
