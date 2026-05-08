@@ -8,4 +8,5 @@ public interface InputPort {
 
     // Connection으로부터 메시지를 수신
     void receive(Message message);
+
 }

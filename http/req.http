@@ -1,0 +1,25 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+GET http://localhost:8080/flows/api-test-flow/metrics
+
+###
+GET http://localhost:8080/nodes/log1/stats
+
+###
+POST http://localhost:8080/flows
+Content-Type: application/json
+
+{
+  "id": "api-test-flow",
+  "name": "API Test Flow",
+  "nodes": [
+    {"id": "gen", "type": "GeneratorNode", "config": {"id": "gen"}},
+    {"id": "log1", "type": "LogNode", "config": {"id": "log1"}}
+  ],
+  "connections": [
+    {"from": "gen:out", "to": "log1:in"}
+  ]
+}

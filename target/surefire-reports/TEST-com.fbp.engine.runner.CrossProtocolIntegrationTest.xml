@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="com.fbp.engine.runner.CrossProtocolIntegrationTest" time="11.683" tests="3" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/chosun-nhn39/fbp-engine/target/test-classes:/Users/chosun-nhn39/fbp-engine/target/classes:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter/5.11.0/junit-jupiter-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.0/junit-jupiter-engine-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/platform/junit-platform-engine/1.11.0/junit-platform-engine-1.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar:/Users/chosun-nhn39/.m2/repository/org/mockito/mockito-junit-jupiter/5.20.0/mockito-junit-jupiter-5.20.0.jar:/Users/chosun-nhn39/.m2/repository/org/mockito/mockito-core/5.20.0/mockito-core-5.20.0.jar:/Users/chosun-nhn39/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar:/Users/chosun-nhn39/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/chosun-nhn39/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/Users/chosun-nhn39/.m2/repository/ch/qos/logback/logback-classic/1.5.32/logback-classic-1.5.32.jar:/Users/chosun-nhn39/.m2/repository/ch/qos/logback/logback-core/1.5.32/logback-core-1.5.32.jar:/Users/chosun-nhn39/.m2/repository/org/eclipse/paho/org.eclipse.paho.mqttv5.client/1.2.5/org.eclipse.paho.mqttv5.client-1.2.5.jar:/Users/chosun-nhn39/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.17.0/jackson-databind-2.17.0.jar:/Users/chosun-nhn39/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.17.0/jackson-annotations-2.17.0.jar:/Users/chosun-nhn39/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.17.0/jackson-core-2.17.0.jar:/Users/chosun-nhn39/.m2/repository/net/bytebuddy/byte-buddy/1.14.9/byte-buddy-1.14.9.jar:/Users/chosun-nhn39/.m2/repository/org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar:/Users/chosun-nhn39/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Asia/Seoul"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="KR"/>
+    <property name="sun.boot.library.path" value="/Users/chosun-nhn39/Library/Java/JavaVirtualMachines/temurin-21.0.8/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/chosun-nhn39/fbp-engine/target/surefire/surefirebooter-20260508141955115_3.jar /Users/chosun-nhn39/fbp-engine/target/surefire 2026-05-08T14-19-55_060-jvmRun1 surefire-20260508141955115_1tmp surefire_0-20260508141955115_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16|lx.astxsvc.com|*.lx.astxsvc.com"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/chosun-nhn39/fbp-engine/target/test-classes:/Users/chosun-nhn39/fbp-engine/target/classes:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter/5.11.0/junit-jupiter-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/platform/junit-platform-commons/1.11.0/junit-platform-commons-1.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.11.0/junit-jupiter-params-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.11.0/junit-jupiter-engine-5.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/junit/platform/junit-platform-engine/1.11.0/junit-platform-engine-1.11.0.jar:/Users/chosun-nhn39/.m2/repository/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar:/Users/chosun-nhn39/.m2/repository/org/mockito/mockito-junit-jupiter/5.20.0/mockito-junit-jupiter-5.20.0.jar:/Users/chosun-nhn39/.m2/repository/org/mockito/mockito-core/5.20.0/mockito-core-5.20.0.jar:/Users/chosun-nhn39/.m2/repository/net/bytebuddy/byte-buddy-agent/1.17.7/byte-buddy-agent-1.17.7.jar:/Users/chosun-nhn39/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/Users/chosun-nhn39/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/Users/chosun-nhn39/.m2/repository/ch/qos/logback/logback-classic/1.5.32/logback-classic-1.5.32.jar:/Users/chosun-nhn39/.m2/repository/ch/qos/logback/logback-core/1.5.32/logback-core-1.5.32.jar:/Users/chosun-nhn39/.m2/repository/org/eclipse/paho/org.eclipse.paho.mqttv5.client/1.2.5/org.eclipse.paho.mqttv5.client-1.2.5.jar:/Users/chosun-nhn39/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.17.0/jackson-databind-2.17.0.jar:/Users/chosun-nhn39/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.17.0/jackson-annotations-2.17.0.jar:/Users/chosun-nhn39/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.17.0/jackson-core-2.17.0.jar:/Users/chosun-nhn39/.m2/repository/net/bytebuddy/byte-buddy/1.14.9/byte-buddy-1.14.9.jar:/Users/chosun-nhn39/.m2/repository/org/hdrhistogram/HdrHistogram/2.2.2/HdrHistogram-2.2.2.jar:/Users/chosun-nhn39/.m2/repository/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/chosun-nhn39"/>
+    <property name="user.language" value="ko"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-07-15"/>
+    <property name="java.home" value="/Users/chosun-nhn39/Library/Java/JavaVirtualMachines/temurin-21.0.8/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/chosun-nhn39/fbp-engine"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/chosun-nhn39/fbp-engine/target/surefire/surefirebooter-20260508141955115_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16|lx.astxsvc.com|*.lx.astxsvc.com"/>
+    <property name="java.runtime.version" value="21.0.8+9-LTS"/>
+    <property name="user.name" value="chosun-nhn39"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="15.7.3"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-21.0.8+9"/>
+    <property name="localRepository" value="/Users/chosun-nhn39/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="/var/folders/3_/rj1kq0hx4nd_ym1_7wzq92k00000gn/T/"/>
+    <property name="java.version" value="21.0.8"/>
+    <property name="user.dir" value="/Users/chosun-nhn39/fbp-engine"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/chosun-nhn39/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="21.0.8+9-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16|lx.astxsvc.com|*.lx.astxsvc.com"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testModbusToRuleToMqtt" classname="com.fbp.engine.runner.CrossProtocolIntegrationTest" time="2.416">
+    <system-out><![CDATA[14:20:01.057 [Thread-3] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] 클라이언트 시작됨 (포트:26020)
+14:20:01.722 [main] INFO com.fbp.engine.core.FlowEngine -- [Engine] 플로우 'flow-cross-2' 등록됨
+14:20:01.723 [main] INFO com.fbp.engine.node.ProtocolNode -- [reader] 연결 성공
+14:20:01.723 [Thread-3] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] 클라이언트 접속됨: /127.0.0.1:51031
+14:20:01.724 [main] INFO com.fbp.engine.node.impl.MqttPublisherNode -- [pub] MQTT Broker(tcp://localhost:1883) 연결 시도
+14:20:02.042 [main] INFO com.fbp.engine.node.impl.MqttPublisherNode -- [pub] MQTT Broker 연결 완료 (Publisher)
+14:20:02.042 [main] INFO com.fbp.engine.node.ProtocolNode -- [pub] 연결 성공
+14:20:02.043 [main] INFO com.fbp.engine.core.FlowEngine -- [Engine] 플로우 'flow-cross-2' 시작됨
+[Simulator] 클라이언트 연결 해제
+14:20:03.364 [main] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] MODBUS 시뮬레이터 종료
+]]></system-out>
+  </testcase>
+  <testcase name="testMqttToRuleToModbus" classname="com.fbp.engine.runner.CrossProtocolIntegrationTest" time="2.119">
+    <system-out><![CDATA[14:20:03.474 [Thread-17] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] 클라이언트 시작됨 (포트:26021)
+14:20:04.003 [main] INFO com.fbp.engine.core.FlowEngine -- [Engine] 플로우 'flow-cross-1' 등록됨
+14:20:04.324 [MQTT Call: sub-cross-1] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] MQTT Broker 연결 완료
+14:20:04.325 [main] INFO com.fbp.engine.node.ProtocolNode -- [sub] 연결 성공
+14:20:04.325 [main] INFO com.fbp.engine.node.ProtocolNode -- [writer] 연결 성공
+14:20:04.325 [Thread-17] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] 클라이언트 접속됨: /127.0.0.1:51035
+14:20:04.325 [main] INFO com.fbp.engine.core.FlowEngine -- [Engine] 플로우 'flow-cross-1' 시작됨
+14:20:05.375 [MQTT Call: sub-cross-1] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=c4e45325-d1e7-426e-9a0c-f4fe314b033f, payload={temperature=35.5, topic=cross/in, mqttTimestamp=1778217605375}, timestamp=1778217605375)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+[Simulator] 클라이언트 연결 해제
+14:20:05.485 [main] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] MODBUS 시뮬레이터 종료
+14:20:05.579 [pool-2-thread-1] WARN com.fbp.engine.metrics.MetricsCollector -- [MetricsCollector] 큐 초과로 버려진 메트릭 수: 2148
+]]></system-out>
+  </testcase>
+  <testcase name="testComplexFlowStability" classname="com.fbp.engine.runner.CrossProtocolIntegrationTest" time="7.144">
+    <system-out><![CDATA[14:20:05.596 [Thread-31] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] 클라이언트 시작됨 (포트:26022)
+14:20:05.688 [pool-2-thread-1] INFO com.fbp.engine.metrics.MetricsCollector -- [MetricsCollector] 5000건 메트릭 InfluxDB 적재 완료
+14:20:06.120 [main] INFO com.fbp.engine.core.FlowEngine -- [Engine] 플로우 'flow-stab-3' 등록됨
+14:20:06.442 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] MQTT Broker 연결 완료
+14:20:06.443 [main] INFO com.fbp.engine.node.ProtocolNode -- [sub] 연결 성공
+14:20:06.444 [main] INFO com.fbp.engine.node.ProtocolNode -- [writer] 연결 성공
+14:20:06.444 [Thread-31] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] 클라이언트 접속됨: /127.0.0.1:51039
+14:20:06.445 [main] INFO com.fbp.engine.core.FlowEngine -- [Engine] 플로우 'flow-stab-3' 시작됨
+14:20:07.457 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=b2e10891-21a8-4128-a981-92018e0b1141, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217607456}, timestamp=1778217607456)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:07.560 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=76e4e822-38fa-4db8-bbd7-f6a8b219f12b, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217607560}, timestamp=1778217607560)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:07.665 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=6c23b8e7-5e2b-4c38-b89e-b0f94a98d1fe, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217607665}, timestamp=1778217607665)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:07.773 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=357b98c6-ef7e-4060-aa71-c6289b0544ae, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217607773}, timestamp=1778217607773)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:07.878 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=4a5b5fdd-5415-4b18-9c27-999632b21b1e, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217607878}, timestamp=1778217607878)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:07.984 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=961b0135-d724-404b-8213-8d5e4733f9f2, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217607984}, timestamp=1778217607984)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.091 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=5b207873-a6e1-4ee2-92ad-56387a0c4961, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608091}, timestamp=1778217608091)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.200 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=723af558-c483-4ca8-b466-adfc9c3364bd, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608200}, timestamp=1778217608200)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.307 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=436b67de-8019-4ca7-939f-bdc4ae78c7d2, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608307}, timestamp=1778217608307)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.414 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=61128e9a-9591-47c2-a7d6-a2b758f2563c, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608414}, timestamp=1778217608414)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.521 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=e891797d-3f5b-4035-ad77-15a7ea146bd2, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608521}, timestamp=1778217608521)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.626 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=f8d74d9a-90b3-489e-ab61-8d358300aba5, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608625}, timestamp=1778217608625)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.730 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=1106dc2a-cc3b-446b-bece-9590b78c5b98, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608730}, timestamp=1778217608730)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.835 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=17df26c0-6d8b-4d63-8db2-c9c140cf384e, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608835}, timestamp=1778217608835)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:08.939 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=da0324b0-3b8b-4bbb-967a-383838b8d696, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217608939}, timestamp=1778217608939)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.046 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=95f8b6be-2be2-4251-8bcf-64d48f1e04ad, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609045}, timestamp=1778217609046)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.150 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=0753178d-5cf8-44e2-82b9-94767b039c37, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609150}, timestamp=1778217609150)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.255 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=762b32d7-9b6c-4b91-87da-3cc09e0c01b9, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609255}, timestamp=1778217609255)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.360 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=a2c2b34b-23a9-4523-b625-572a612540c2, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609360}, timestamp=1778217609360)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.467 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=8d3cca4c-1e5e-4f09-88f1-b2d1da494663, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609467}, timestamp=1778217609467)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.573 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=f7ecf0ca-c1b5-4da0-9127-d3de8d13588a, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609573}, timestamp=1778217609573)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.676 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=2844eeb6-59ec-40c7-a81c-a0dc9404301c, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609676}, timestamp=1778217609676)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.785 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=41a9d51e-dced-477d-8386-e27c430b6052, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609784}, timestamp=1778217609784)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.891 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=8303beb1-1fc6-4cea-af98-5932ad9983bb, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609890}, timestamp=1778217609890)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:09.995 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=627e4cb5-bc7a-43e6-9827-3e92d322af42, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217609995}, timestamp=1778217609995)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.104 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=64022bc7-42fc-439a-ae8c-0ded955289de, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610104}, timestamp=1778217610104)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.212 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=b8ac4d93-9dcb-4b03-b7bd-3577b0285efd, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610212}, timestamp=1778217610212)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.317 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=350380ad-62d7-4911-8dac-704cc4bd8f42, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610317}, timestamp=1778217610317)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.426 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=99dc994b-0762-44ed-902a-b293767c4f89, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610425}, timestamp=1778217610425)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.535 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=d9b77457-1810-4399-8147-6ac219368c76, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610534}, timestamp=1778217610535)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.639 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=7a190477-5255-47d1-97b8-adb098a61d23, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610639}, timestamp=1778217610639)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.747 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=5a34753e-812d-4c31-a3f2-453f5ebed044, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610747}, timestamp=1778217610747)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.855 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=7e0c1a6f-f55a-40b7-a389-95ce9456607d, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610855}, timestamp=1778217610855)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:10.959 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=f0edb041-56d9-4220-9220-f42425f02241, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217610959}, timestamp=1778217610959)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.060 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=0bdd5728-d650-4d0f-97e0-5663d4b30a4c, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611060}, timestamp=1778217611060)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.167 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=2eb9ce74-9d0f-416f-9210-4bf70fd6e9aa, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611167}, timestamp=1778217611167)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.273 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=3083bae3-6bd2-4651-bc31-b137d3243397, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611273}, timestamp=1778217611273)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.380 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=dd844aa9-d709-47c8-86c6-e2ba98eb44ff, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611380}, timestamp=1778217611380)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.485 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=2f818421-d06c-4099-a935-a7d49746ca64, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611485}, timestamp=1778217611485)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.587 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=5b216d10-3ddc-4cd6-8b8d-9d942aab0b8d, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611587}, timestamp=1778217611587)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.691 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=2053fe63-3808-4129-bc06-659de43e81f2, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611691}, timestamp=1778217611691)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.797 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=b73c4c83-ab1e-401b-adbb-0ea2eae8f150, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611797}, timestamp=1778217611797)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:11.898 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=cac246f6-9d99-4b7b-80f4-527985e55c49, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217611898}, timestamp=1778217611898)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:12.000 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=24d31a3b-dfe0-46b7-9629-37b32af3c0ba, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217612000}, timestamp=1778217612000)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:12.106 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=94a8bc9a-fb29-44f3-aa9a-fa839ac969aa, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217612106}, timestamp=1778217612106)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:12.216 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=9a8e2492-8dc2-48eb-806f-a7f8497f1d7d, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217612216}, timestamp=1778217612216)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:12.318 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=5049ab7b-c8a0-4f0d-922d-6eb1418a4855, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217612318}, timestamp=1778217612318)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+14:20:12.420 [MQTT Call: sub-stab-3] INFO com.fbp.engine.node.impl.MqttSubscriberNode -- [sub] 메시지 수신 및 전송 완료: Message(id=cb02727e-aa4f-4945-972d-407aa381b632, payload={temperature=35.5, topic=stability/in, mqttTimestamp=1778217612420}, timestamp=1778217612420)
+[Simulator] 레지스터 쓰기 발생 -> 주소: 2, 값: 1
+[Simulator] 클라이언트 연결 해제
+14:20:12.631 [main] INFO com.fbp.engine.protocol.ModbusTcpSimulator -- [Simulator] MODBUS 시뮬레이터 종료
+]]></system-out>
+  </testcase>
+</testsuite>

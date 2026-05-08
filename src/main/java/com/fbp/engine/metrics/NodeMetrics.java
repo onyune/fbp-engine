@@ -1,38 +1,38 @@
 package com.fbp.engine.metrics;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
+import org.HdrHistogram.ConcurrentHistogram;
 
-/// 노드별 메트릭 데이터 (처리 건수, 에러 수, 평균 처리시간)
 public class NodeMetrics {
-    private final AtomicLong processedCount = new AtomicLong(0);
-    private final AtomicLong errorCount = new AtomicLong(0);
-    private final AtomicLong totalProcessingTime = new AtomicLong(0);
+    // 병목(Contention) 방지를 위해 LongAdder 사용
+    private final LongAdder processedCount = new LongAdder();
+    private final LongAdder errorCount = new LongAdder();
+    private final LongAdder totalProcessingTime = new LongAdder();
+
+
+    private final ConcurrentHistogram latencyHistogram = new ConcurrentHistogram(1, 3600000, 3);
     public record Snapshot(long processedCount, long errorCount, double averageTime) {}
 
     public void recordSuccess(long timeMs) {
-        processedCount.incrementAndGet();
-        totalProcessingTime.addAndGet(timeMs);
+        processedCount.increment();
+        totalProcessingTime.add(timeMs);
+        latencyHistogram.recordValue(timeMs);
     }
 
     public void recordError() {
-        errorCount.incrementAndGet();
+        errorCount.increment();
     }
 
-    public long getProcessedCount() {
-        return processedCount.get();
-    }
-
-    public long getErrorCount() {
-        return errorCount.get();
-    }
-    public long getTotalProcessingTime() {
-        return totalProcessingTime.get();
-    }
+    public long getProcessedCount() { return processedCount.sum(); }
+    public long getErrorCount() { return errorCount.sum(); }
+    public long getTotalProcessingTime() { return totalProcessingTime.sum(); }
 
     public double getAverageTime() {
-        long count = processedCount.get();
-
-        return count == 0 ? 0.0 : (double) totalProcessingTime.get() / count;
+        long count = getProcessedCount();
+        return count == 0 ? 0.0 : (double) getTotalProcessingTime() / count;
+    }
+    public long getP99Time() {
+        return latencyHistogram.getTotalCount() > 0 ? latencyHistogram.getValueAtPercentile(99.0) : 0;
     }
 
     public Snapshot getSnapshot() {

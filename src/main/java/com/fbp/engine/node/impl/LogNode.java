@@ -18,9 +18,14 @@ public class LogNode extends AbstractNode {
 
     @Override
     protected void onProcess(Message message) {
+//        try{
+//            Thread.sleep(2000);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
 
-        System.out.println("["+time+"]["+getId()+"] "+ message.getPayload());
+//        System.out.println("["+time+"]["+getId()+"] "+ message.getPayload());
 
         send("out", message);
     }

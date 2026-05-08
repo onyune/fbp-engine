@@ -15,7 +15,11 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * /flows /flows/{id} GET : 실행 중인 플로우 목록 POST : 새 플로우 배포 DELETE : 플로우 중지 및 삭제
+ * /flows
+ * /flows/{id}
+ * GET : 실행 중인 플로우 목록
+ * POST : 새 플로우 배포
+ * DELETE : 플로우 중지 및 삭제
  */
 @Slf4j
 public class FlowHandler implements HttpHandler {
@@ -33,33 +37,27 @@ public class FlowHandler implements HttpHandler {
 
         try {
             if ("GET".equals(method)) {
-                // GET /flows - 목록 조회
                 if (path.endsWith("/metrics")) {
                     handleMetrics(exchange, path);
-                }
-                // GET /flows (목록 조회) 인 경우
-                else {
+                } else {
                     List<Map<String, String>> flows = flowManager.list().stream()
                             .map(f -> Map.of(
                                     "id", f.getId(),
-                                    "name", f.getName(),
+                                    "name", f.getName() != null ? f.getName() : "unnamed",
                                     "status", f.getState().name()
                             ))
                             .toList();
                     ApiResponse.success(flows).send(exchange, 200);
                 }
             } else if ("POST".equals(method)) {
-                // POST /flows - 신규 배포
                 FlowDefinition def = parser.parse(exchange.getRequestBody());
                 flowManager.deploy(def);
                 ApiResponse.success(Map.of("id", def.id(), "status", "DEPLOYED")).send(exchange, 201);
             } else if ("DELETE".equals(method)) {
-                // DELETE /flows/{id} - 삭제
                 String flowId = path.substring("/flows/".length());
                 if (flowId.isEmpty()) {
                     throw new IllegalArgumentException("플로우 ID가 필요합니다.");
                 }
-
                 flowManager.remove(flowId);
                 ApiResponse.success(Map.of("message", "Flow removed: " + flowId)).send(exchange, 200);
             } else {
@@ -72,41 +70,43 @@ public class FlowHandler implements HttpHandler {
     }
 
     private void handleMetrics(HttpExchange exchange, String path) {
-        String flowId = path.substring("/flows/".length(), path.lastIndexOf("/metrics"));
-        Flow flow = flowManager.getFlow(flowId);
+        try {
+            String flowId = path.substring("/flows/".length(), path.lastIndexOf("/metrics"));
+            Flow flow = flowManager.getFlow(flowId);
 
-        if (flow == null) {
-            ApiResponse.error("Flow not found").send(exchange, 404);
-            return;
-        }
-
-        List<String> nodeIds = flow.getNodes().stream()
-                .map(node -> node.getId())
-                .toList();
-        FlowMetrics flowMetrics = MetricsCollector.getInstance().getFlowMetrics(flowId, nodeIds);
-
-        List<Map<String, Object>> nodeStats = flowMetrics.getNodes().entrySet().stream().map(entry -> {
-            String nodeId = entry.getKey();
-            NodeMetrics nm = entry.getValue();
-
-            if (nm == null) {
-                nm = new NodeMetrics();
+            if (flow == null) {
+                ApiResponse.error("Flow not found: " + flowId).send(exchange, 404);
+                return;
             }
 
-            return Map.<String, Object>of(
-                    "id", nodeId,
-                    "processed", nm.getProcessedCount(),
-                    "errors", nm.getErrorCount(),
-                    "avgTime", nm.getAverageTime()
-            );
-        }).toList();
+            List<String> nodeIds = flow.getNodes().stream()
+                    .map(node -> node.getId())
+                    .toList();
 
-        Map<String, Object> responseData = Map.of(
-                "totalProcessed", flowMetrics.getTotalProcessed(),
-                "totalErrors", flowMetrics.getTotalErrors(),
-                "overallAvgTime", flowMetrics.getOverallAverageTime(),
-                "nodes", nodeStats
-        );
-        ApiResponse.success(responseData).send(exchange, 200);
+            FlowMetrics flowMetrics = MetricsCollector.getInstance().getFlowMetrics(flowId, nodeIds);
+
+            List<Map<String, Object>> nodeStats = flowMetrics.getNodes().entrySet().stream().map(entry -> {
+                String nodeId = entry.getKey();
+                NodeMetrics nm = entry.getValue();
+
+                return Map.<String, Object>of(
+                        "id", nodeId,
+                        "processed", nm.getProcessedCount(),
+                        "errors", nm.getErrorCount(),
+                        "avgTime", String.format("%.2f ms", nm.getAverageTime())
+                );
+            }).toList();
+
+            Map<String, Object> responseData = Map.of(
+                    "flowId", flowId,
+                    "totalProcessed", flowMetrics.getTotalProcessed(),
+                    "totalErrors", flowMetrics.getTotalErrors(),
+                    "overallAvgTime", String.format("%.2f ms", flowMetrics.getOverallAverageTime()),
+                    "nodes", nodeStats
+            );
+            ApiResponse.success(responseData).send(exchange, 200);
+        } catch (Exception e) {
+            log.error("[FlowHandler] 메트릭 조회 실패", e);
+        }
     }
 }

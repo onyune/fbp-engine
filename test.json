@@ -1,0 +1,10 @@
+{
+  "id": "cli-test-flow",
+  "nodes": [
+    { "id": "gen2", "type": "GeneratorNode" },
+    { "id": "log2", "type": "LogNode" }
+  ],
+  "connections": [
+    { "from": "gen2:out", "to": "log2:in" }
+  ]
+}

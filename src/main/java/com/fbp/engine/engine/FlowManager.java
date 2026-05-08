@@ -7,6 +7,7 @@ import com.fbp.engine.core.FlowEngine;
 import com.fbp.engine.core.impl.JsonMessageSerializer;
 import com.fbp.engine.core.impl.LocalConnection;
 import com.fbp.engine.core.impl.MqttBridgeConnection;
+import com.fbp.engine.metrics.MetricsCollector;
 import com.fbp.engine.node.AbstractNode;
 import com.fbp.engine.node.Node;
 import com.fbp.engine.parser.ConnectionDefinition;
@@ -92,6 +93,8 @@ public class FlowManager {
         // 4. FlowEngine에 위임 (등록 및 실행)
         flowEngine.register(flow);
         flowEngine.startFlow(flow.getId());
+        MetricsCollector.getInstance()
+                .recordFlowEvent(flow.getId(), "DEPLOY", "admin", "Flow deployed with " + flow.getNodes().size() + " nodes");
     }
 
     /**
@@ -133,6 +136,8 @@ public class FlowManager {
         }
         flowEngine.stopFlow(flowId);
         flowEngine.getFlows().remove(flowId);
+        MetricsCollector.getInstance()
+                .recordFlowEvent(flowId, "REMOVE", "admin", "Flow removed successfully");
     }
 
     /**

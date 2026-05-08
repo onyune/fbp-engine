@@ -7,6 +7,7 @@ import com.fbp.engine.core.impl.DefaultOutputPort;
 import com.fbp.engine.core.impl.ErrorPort;
 import com.fbp.engine.exception.NodeProcessException;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.metrics.DomainMetricsExtractor;
 import com.fbp.engine.metrics.MetricsCollector;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,10 @@ public abstract class AbstractNode implements Node{
         OutputPort port = outputPorts.get(portName);
         if(port!=null){
             port.send(message);
+            // 메세지가 나갈때 동적 추출기에게 검사받고 나가기
+            String fId = this.flowId != null ? this.flowId : "unknown-flow";
+            DomainMetricsExtractor.getInstance()
+                    .extract(fId, this.id, portName, message);
         }
     }
 
@@ -60,16 +65,21 @@ public abstract class AbstractNode implements Node{
     public final void process(Message message) {
         long startTime = System.currentTimeMillis();
         boolean success = true;
-        try{
+        int inBytes = message.getPayload() != null ? message.getPayload().toString().getBytes().length : 0;
+
+        try {
             onProcess(message);
-        }catch (Exception e){
-            success=false;
+        } catch (Exception e) {
+            success = false;
             handlerError(message, e);
-        }finally {
-            long durationMs = System.currentTimeMillis() -startTime;
-            String metricKey = (flowId != null ? flowId + ":" : "") + id;
+        } finally {
+            long durationMs = System.currentTimeMillis() - startTime;
+
+            String fId = this.flowId != null ? this.flowId : "unknown-flow";
+            String nodeType = this.getClass().getSimpleName();
+
             MetricsCollector.getInstance()
-                    .recordProcessing(metricKey, durationMs, success);
+                    .recordNodeProcessing(fId, this.id, nodeType, durationMs, success, inBytes, inBytes);
         }
     }
 

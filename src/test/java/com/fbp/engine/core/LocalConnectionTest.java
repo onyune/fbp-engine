@@ -1,7 +1,6 @@
 package com.fbp.engine.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fbp.engine.core.impl.LocalConnection;
@@ -68,25 +67,26 @@ class LocalConnectionTest {
         assertEquals(targetMsg, receivedMsg.get());
     }
 
-    @Test
-    void testBufferCapacityBlocking() throws InterruptedException {
-        LocalConnection conn = new LocalConnection("test-conn", 2);
-
-        conn.deliver(new Message(new HashMap<>()));
-        conn.deliver(new Message(new HashMap<>()));
-
-        CountDownLatch latch = new CountDownLatch(1);
-        Thread producer = new Thread(() -> {
-            conn.deliver(new Message(new HashMap<>()));
-            latch.countDown();
-        });
-        producer.start();
-
-        assertFalse(latch.await(500, TimeUnit.MILLISECONDS));
-        assertEquals(2, conn.getBufferSize());
-
-        producer.interrupt();
-    }
+    //옛날 방식의 엔진 구동방법
+//    @Test
+//    void testBufferCapacityBlocking() throws InterruptedException {
+//        LocalConnection conn = new LocalConnection("test-conn", 2);
+//
+//        conn.deliver(new Message(new HashMap<>()));
+//        conn.deliver(new Message(new HashMap<>()));
+//
+//        CountDownLatch latch = new CountDownLatch(1);
+//        Thread producer = new Thread(() -> {
+//            conn.deliver(new Message(new HashMap<>()));
+//            latch.countDown();
+//        });
+//        producer.start();
+//
+//        assertFalse(latch.await(500, TimeUnit.MILLISECONDS));
+//        assertEquals(2, conn.getBufferSize());
+//
+//        producer.interrupt();
+//    }
 
     @Test
     void testBufferSize() {

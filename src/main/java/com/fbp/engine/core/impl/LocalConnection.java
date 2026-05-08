@@ -3,6 +3,7 @@ package com.fbp.engine.core.impl;
 import com.fbp.engine.core.Connection;
 import com.fbp.engine.core.InputPort;
 import com.fbp.engine.message.Message;
+import com.fbp.engine.metrics.MetricsCollector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import lombok.Getter;
@@ -29,11 +30,9 @@ public class LocalConnection implements Connection {
 
     //생산자용: 데이터를 큐에 넣기만 함 (목적지로 바로 쏘지 않음)
     public void deliver(Message message){
-        try{
-            buffer.put(message);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        boolean success = buffer.offer(message);
+        MetricsCollector.getInstance()
+                .recordWireEvent(this.id, "local", success, buffer.size());
     }
 
     @Override
