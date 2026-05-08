@@ -17,6 +17,10 @@ public class HttpApiServer {
         this.port = port;
     }
 
+    public HttpApiServer() {
+        this.port=8080;
+    }
+
     public void start(FlowManager flowManager) throws IOException{
         server=HttpServer.create(new InetSocketAddress(port), 0 );
         server.setExecutor(Executors.newFixedThreadPool(10));

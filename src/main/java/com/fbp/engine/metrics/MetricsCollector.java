@@ -28,8 +28,8 @@ public class MetricsCollector {
     // 2. 백그라운드 스케줄러 (10초마다 큐를 비워서 InfluxDB로 전송)
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    // 3. InfluxDB HTTP 클라이언트 및 설정 (자신의 환경에 맞게 수정 필요)
-    private static final String INFLUX_URL = "http://iot-influxdb/api/v2/write?org=iot-lab&bucket=sensor_data&precision=ms";
+    // 3. InfluxDB HTTP 클라이언트 및 설정
+    private static final String INFLUX_URL = "http://localhost:8086/api/v2/write?org=iot-lab&bucket=fbp-metrics&precision=ms";
     private static final String INFLUX_TOKEN = "iot-lab-super-secret-auth-token"; // 발급받은 토큰 입력
     private final HttpClient httpClient;
 
