@@ -18,6 +18,7 @@ import com.fbp.engine.registry.NodeRegistry;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FlowManager {
     private final NodeRegistry nodeRegistry;
     private final FlowEngine flowEngine;
+    private final Map<String, List<FlowDefinition>> flowHistory = new HashMap<>();
 
     public FlowManager(NodeRegistry nodeRegistry, FlowEngine flowEngine) {
         this.nodeRegistry = nodeRegistry;
@@ -56,6 +58,8 @@ public class FlowManager {
             }
 
             AbstractNode absNode = (AbstractNode) node;
+
+            absNode.setId(nodeDef.id());
             absNode.setFlowId(flow.getId());
             flow.addNode(absNode);
             createdNodes.put(nodeDef.id(), absNode);
@@ -95,6 +99,7 @@ public class FlowManager {
         flowEngine.startFlow(flow.getId());
         MetricsCollector.getInstance()
                 .recordFlowEvent(flow.getId(), "DEPLOY", "admin", "Flow deployed with " + flow.getNodes().size() + " nodes");
+        flowHistory.computeIfAbsent(definition.id(), k -> new java.util.ArrayList<>()).add(definition);
     }
 
     /**
@@ -161,6 +166,7 @@ public class FlowManager {
 
         Node node = nodeRegistry.create(nodeDef.type(),nodeDef.config());
         AbstractNode absNode = (AbstractNode) node;
+        absNode.setId(nodeDef.id());
         absNode.setFlowId(flowId);
         flow.addNode(absNode);
 
@@ -288,6 +294,88 @@ public class FlowManager {
             log.info("  [+] Wire 추가 완료: {}", connId);
         }
 
+        flowHistory.get(flowId).add(newDef);
+
         log.info("[FlowManager] 플로우 [{}] 동적 패치 완료!", flowId);
+    }
+
+    /**
+     * 특정 플로우의 변경 이력(Revision 목록)을 조회합니다.
+     */
+    public List<String> getHistory(String flowId) {
+        List<FlowDefinition> history = flowHistory.getOrDefault(flowId, Collections.emptyList());
+        if (history.isEmpty()) return List.of("이력이 없습니다.");
+
+        List<String> result = new java.util.ArrayList<>();
+        for (int i = 0; i < history.size(); i++) {
+            FlowDefinition def = history.get(i);
+            result.add(String.format("[Rev %d] Nodes: %d, Wires: %d", i, def.nodes().size(), def.connections().size()));
+        }
+        return result;
+    }
+
+    /**
+     * 특정 리비전으로 플로우 상태를 되돌립니다
+     */
+    public void rollback(String flowId, int revision) {
+        List<FlowDefinition> history = flowHistory.get(flowId);
+        if (history == null || revision < 0 || revision >= history.size()) {
+            throw new IllegalArgumentException("유효하지 않은 플로우 ID 또는 리비전 번호입니다.");
+        }
+
+        // 과거의 명세서를 꺼내서 패치 메서드에 밀어넣기
+        FlowDefinition targetDef = history.get(revision);
+        log.info("[FlowManager] 플로우 [{}]를 리비전 {}으로 롤백합니다.", flowId, revision);
+        patch(flowId, targetDef);
+    }
+
+    /**
+     * 노드의 Config를 런타임에 교체하고, 기존 연결(Wire)을 완벽하게 복구합니다.
+     */
+    public void updateNodeConfig(String flowId, String nodeId, Map<String, Object> newConfig) {
+        Flow flow = getFlow(flowId);
+        if (flow == null) throw new IllegalArgumentException("플로우를 찾을 수 없습니다: " + flowId);
+
+        Node existingNode = flow.getNodes().stream().filter(n -> n.getId().equals(nodeId)).findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("노드를 찾을 수 없습니다: " + nodeId));
+        String nodeType = existingNode.getClass().getSimpleName();
+
+        // History에서 가장 최신 플로우 상태(명세서) 가져오기
+        List<FlowDefinition> history = flowHistory.getOrDefault(flowId, Collections.emptyList());
+        if (history.isEmpty()) {
+            throw new IllegalStateException("이력이 없어 연결 정보를 복구할 수 없습니다.");
+        }
+        FlowDefinition latestDef = history.get(history.size() - 1);
+        TransportDefinition transportDef = latestDef.transport();
+
+        // 최신 명세서에서 대상 노드(nodeId)와 관련된 연결(Wire) 정보만 쏙 뽑아서 백업.
+        List<ConnectionDefinition> backupConnections = latestDef.connections().stream()
+                .filter(c -> c.sourceId().equals(nodeId) || c.targetId().equals(nodeId))
+                .collect(Collectors.toList());
+
+        // 기존 노드 삭제 (이때 removeNode 내부 로직에 의해 런타임 선들이 모두 끊어짐)
+        removeNode(flowId, nodeId);
+
+        // 새로운 설정을 가진 노드 객체를 만들어서 플로우에 추가
+        NodeDefinition newDef = new NodeDefinition(nodeId, nodeType, newConfig);
+        addNode(flowId, newDef);
+
+        // 백업해둔 연결 정보를 바탕으로 새 노드에 선을 다시 이어줍니다!
+        for (ConnectionDefinition cDef : backupConnections) {
+            addConnection(flowId, cDef, transportDef);
+        }
+
+        // Config가 변경된 현재의 완벽한 상태를 History에 새 리비전으로 저장합니다.
+        List<NodeDefinition> updatedNodes = latestDef.nodes().stream()
+                .map(n -> n.id().equals(nodeId) ? newDef : n)
+                .collect(Collectors.toList());
+
+        FlowDefinition updatedFlowDef = new FlowDefinition(
+                latestDef.id(), latestDef.name(), latestDef.description(),
+                transportDef, updatedNodes, latestDef.connections()
+        );
+        history.add(updatedFlowDef);
+
+        log.info("[FlowManager] 노드 [{}] 설정 업데이트 및 연결 복구 완료", nodeId);
     }
 }

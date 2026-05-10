@@ -4,11 +4,13 @@ import com.fbp.engine.message.Message;
 import com.fbp.engine.node.AbstractNode;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * input port : in
  * output port : out
  */
+@Slf4j
 public class LogNode extends AbstractNode {
     public LogNode(String id) {
         super(id);
@@ -25,7 +27,7 @@ public class LogNode extends AbstractNode {
 //        }
         String time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"));
 
-//        System.out.println("["+time+"]["+getId()+"] "+ message.getPayload());
+        log.info("[{}][{}] {}",time,getId(), message.getPayload());
 
         send("out", message);
     }

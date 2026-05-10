@@ -18,7 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractNode implements Node{
     @Getter
-    private final String id;
+    @Setter
+    private String id;
 
     @Setter
     @Getter

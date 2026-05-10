@@ -7,7 +7,9 @@ import com.fbp.engine.metrics.NodeMetrics;
 import com.fbp.engine.node.Node;
 import com.fbp.engine.parser.FlowDefinition;
 import com.fbp.engine.parser.JsonFlowParser;
+import com.fbp.engine.parser.NodeDefinition;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class FbpCli {
@@ -131,51 +133,141 @@ public class FbpCli {
                 break;
             case "start":
                 if (args.length < 3) { System.out.println("사용법: flow start <id>"); return; }
-                System.out.println("[미구현] 플로우 시작: " + args[2]);
+                try {
+                    flowManager.restart(args[2]);
+                    System.out.println("플로우 시작 완료: " + args[2]);
+                } catch (Exception e) {
+                    System.out.println("플로우 시작 실패: " + e.getMessage());
+                }
                 break;
             case "stop":
                 if (args.length < 3) { System.out.println("사용법: flow stop <id>"); return; }
-                System.out.println("[미구현] 플로우 정지: " + args[2]);
+                try {
+                    flowManager.stop(args[2]);
+                    System.out.println("플로우 정지 완료: " + args[2]);
+                } catch (Exception e) {
+                    System.out.println("플로우 정지 실패: " + e.getMessage());
+                }
                 break;
             case "restart":
                 if (args.length < 3) { System.out.println("사용법: flow restart <id>"); return; }
-                System.out.println("[미구현] 플로우 재시작: " + args[2]);
+                try {
+                    flowManager.stop(args[2]);
+                    flowManager.restart(args[2]);
+                    System.out.println("플로우 재시작 완료: " + args[2]);
+                } catch (Exception e) {
+                    System.out.println("플로우 재시작 실패: " + e.getMessage());
+                }
                 break;
             case "remove":
                 if (args.length < 3) { System.out.println("사용법: flow remove <id>"); return; }
-                System.out.println("[미구현] 플로우 삭제: " + args[2]);
+                try {
+                    flowManager.remove(args[2]);
+                    System.out.println("플로우 삭제 완료: " + args[2]);
+                } catch (Exception e) {
+                    System.out.println("플로우 삭제 실패: " + e.getMessage());
+                }
                 break;
             case "patch":
                 if (args.length < 4) { System.out.println("사용법: flow patch <id> <file>"); return; }
-                System.out.println("[미구현] 플로우 동적 패치 적용 - ID: " + args[2] + ", File: " + args[3]);
+                try {
+                    String flowId = args[2];
+                    String filePath = args[3];
+                    java.io.InputStream fis = Files.newInputStream(java.nio.file.Paths.get(filePath));
+                    FlowDefinition newDef = new JsonFlowParser().parse(fis);
+                    flowManager.patch(flowId, newDef);
+                    System.out.println("플로우 동적 패치 성공: " + flowId);
+                } catch (java.nio.file.NoSuchFileException e) {
+                    System.out.println("파일을 찾을 수 없습니다: " + args[3]);
+                } catch (Exception e) {
+                    System.out.println("패치 실패: " + e.getMessage());
+                }
                 break;
             case "add-node":
                 if (args.length < 4) { System.out.println("사용법: flow add-node <id> <spec>"); return; }
-                System.out.println("[미구현] 노드 추가 - Flow: " + args[2] + ", Spec: " + args[3]);
+                if (args.length < 4) { System.out.println("사용법: flow add-node <id> <nodeId:type>"); return; }
+                try {
+                    String flowId = args[2];
+                    String[] nodeInfo = args[3].split(":");
+                    if(nodeInfo.length != 2) throw new IllegalArgumentException("형식 오류. 예: myNode:GeneratorNode");
+
+                    NodeDefinition nDef = new NodeDefinition(nodeInfo[0], nodeInfo[1], java.util.Map.of());
+                    flowManager.addNode(flowId, nDef);
+                    System.out.println("노드 동적 추가 성공: " + nodeInfo[0]);
+                } catch (Exception e) {
+                    System.out.println("노드 추가 실패: " + e.getMessage());
+                }
                 break;
             case "remove-node":
                 if (args.length < 4) { System.out.println("사용법: flow remove-node <id> <node-id>"); return; }
-                System.out.println("[미구현] 노드 제거 - Flow: " + args[2] + ", Node: " + args[3]);
+                try {
+                    flowManager.removeNode(args[2], args[3]);
+                    System.out.println("노드 동적 제거 성공: " + args[3]);
+                } catch (Exception e) {
+                    System.out.println("노드 제거 실패: " + e.getMessage());
+                }
                 break;
             case "add-wire":
                 if (args.length < 5) { System.out.println("사용법: flow add-wire <id> <from> <to>"); return; }
-                System.out.println("[미구현] 연결 추가 - Flow: " + args[2] + ", From: " + args[3] + " To: " + args[4]);
+                try {
+                    String flowId = args[2];
+                    String[] from = args[3].split(":");
+                    String[] to = args[4].split(":");
+                    if(from.length != 2 || to.length != 2) throw new IllegalArgumentException("형식 오류. 예: gen1:out log1:in");
+
+                    com.fbp.engine.parser.ConnectionDefinition cDef = new com.fbp.engine.parser.ConnectionDefinition(from[0], from[1], to[0], to[1]);
+                    // CLI에서 즉석 추가 시 Transport는 로컬로 가정 (null)
+                    flowManager.addConnection(flowId, cDef, null);
+                    System.out.println("와이어 동적 연결 성공");
+                } catch (Exception e) {
+                    System.out.println("와이어 연결 실패: " + e.getMessage());
+                }
                 break;
             case "remove-wire":
                 if (args.length < 4) { System.out.println("사용법: flow remove-wire <id> <wire-id>"); return; }
-                System.out.println("[미구현] 연결 제거 - Flow: " + args[2] + ", Wire: " + args[3]);
+                try {
+                    flowManager.removeConnection(args[2], args[3]);
+                    System.out.println("와이어 동적 제거 성공: " + args[3]);
+                } catch (Exception e) {
+                    System.out.println("와이어 제거 실패: " + e.getMessage());
+                }
                 break;
             case "update-config":
                 if (args.length < 5) { System.out.println("사용법: flow update-config <id> <node-id> <config>"); return; }
-                System.out.println("[미구현] 노드 설정 변경 - Flow: " + args[2] + ", Node: " + args[3] + ", Config: " + args[4]);
+                try {
+                    String flowId = args[2];
+                    String nodeId = args[3];
+                    // 띄어쓰기가 있는 JSON 문자열을 하나로 합치기
+                    String configStr = String.join(" ", java.util.Arrays.copyOfRange(args, 4, args.length));
+                    java.util.Map<String, Object> newConfig = new com.fasterxml.jackson.databind.ObjectMapper().readValue(configStr, java.util.Map.class);
+
+                    flowManager.updateNodeConfig(flowId, nodeId, newConfig);
+                    System.out.println("노드 설정 변경 성공: " + nodeId);
+                } catch (Exception e) {
+                    System.out.println("노드 설정 변경 실패: " + e.getMessage());
+                }
                 break;
             case "history":
                 if (args.length < 3) { System.out.println("사용법: flow history <id>"); return; }
-                System.out.println("[미구현] 변경 이력 조회 - Flow: " + args[2]);
+                try {
+                    java.util.List<String> logs = flowManager.getHistory(args[2]);
+                    System.out.println("=== [" + args[2] + "] 변경 이력 ===");
+                    for (int i = 0; i < logs.size(); i++) {
+                        System.out.println(logs.get(i));
+                    }
+                } catch (Exception e) {
+                    System.out.println("이력 조회 실패: " + e.getMessage());
+                }
                 break;
             case "rollback":
                 if (args.length < 4) { System.out.println("사용법: flow rollback <id> <rev>"); return; }
-                System.out.println("[미구현] 롤백 - Flow: " + args[2] + ", Revision: " + args[3]);
+                try {
+                    int rev = Integer.parseInt(args[3]);
+                    flowManager.rollback(args[2], rev);
+                    System.out.println("롤백 성공: Revision " + rev + " 버전으로 복구되었습니다.");
+                } catch (Exception e) {
+                    System.out.println("롤백 실패: " + e.getMessage());
+                }
                 break;
             default:
                 System.out.println("알 수 없는 flow 명령어입니다: " + subCmd);
