@@ -27,6 +27,13 @@
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/FlowManager.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/ThreadPoolConfig.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/FbpCli.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/FlowCommand.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/MonitorCommand.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/NodeCommand.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/RootCommand.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/SensorCommand.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/SystemCommand.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/cli/command/WireCommand.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/test/LoadTester.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/test/MemoryMonitor.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/engine/test/PerformanceResult.java
@@ -56,6 +63,7 @@
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/FileWriteNode.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/FilterNode.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/GeneratorNode.java
+/Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/HealthCheckerNode.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/HumiditySensorNode.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/LogNode.java
 /Users/chosun-nhn39/fbp-engine/src/main/java/com/fbp/engine/node/impl/MergeNode.java

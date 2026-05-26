@@ -12,10 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
+import java.util.function.Consumer;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 
@@ -55,6 +58,16 @@ public class MetricsCollector {
     private final Map<String, SensorWindow> window1d = new ConcurrentHashMap<>();
     private final Map<String, FlowMetricsCache> flowMetricsMap = new ConcurrentHashMap<>();
 
+    private final List<Consumer<String>> listeners = new CopyOnWriteArrayList<>();
+
+    public void addListener(Consumer<String> listener) { listeners.add(listener); }
+    public void removeListener(Consumer<String> listener) { listeners.remove(listener); }
+    private void notifyListeners(String line) { listeners.forEach(l -> l.accept(line)); }
+
+    public Map<String, SensorWindow> getWindow1m() { return window1m; }
+    public Map<String, SensorWindow> getWindow1h() { return window1h; }
+    public Map<String, SensorWindow> getWindow1d() { return window1d; }
+
     private MetricsCollector() {
         this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build();
 
@@ -66,6 +79,16 @@ public class MetricsCollector {
         scheduler.scheduleAtFixedRate(() -> flushSensorWindow(window1h, "sensor_stats_1h"), 1, 1, TimeUnit.HOURS);
         scheduler.scheduleAtFixedRate(() -> flushSensorWindow(window1d, "sensor_stats_1d"), 1, 1, TimeUnit.DAYS);
     }
+
+    private boolean lastFlushSuccess = true;
+
+    public int getEventQueueSize() { return eventQueue.size(); }
+    public int getOfflineBufferSize() { return offlineBuffer.size(); }
+    public long getDroppedMetricsCount() { return droppedMetricsCount.sum(); }
+    public long getGlobalProcessed() { return globalProcessed.sum(); }
+    public long getGlobalErrors() { return globalErrors.sum(); }
+    public boolean isInfluxConnected() { return lastFlushSuccess; }
+    public String getInfluxUrl() { return influxUrl; }
 
     private void loadConfiguration() {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("application.yml")) {
@@ -129,12 +152,11 @@ public class MetricsCollector {
         // 메모리 캐시 업데이트 (LongAdder 사용)
         String metricKey = flowId + ":" + nodeId;
         NodeMetrics metrics = metricsMap.computeIfAbsent(metricKey, k -> new NodeMetrics());
+        metrics.recordProcessing(durationMs, success, inBytes, outBytes);
+
         if (success) {
-            metrics.recordSuccess(durationMs);
             globalProcessed.increment();
-        }
-        else{
-            metrics.recordError();
+        } else {
             globalErrors.increment();
         }
 
@@ -153,6 +175,7 @@ public class MetricsCollector {
         if (!eventQueue.offer(lineProtocol)) {
             droppedMetricsCount.increment();
         }
+        notifyListeners(lineProtocol);
     }
 
     /**
@@ -164,6 +187,7 @@ public class MetricsCollector {
                 flowId, nodeId, sensorName, location, value, System.currentTimeMillis()
         );
         if (!eventQueue.offer(lineProtocol)) droppedMetricsCount.increment();
+        notifyListeners(lineProtocol);
 
         String windowKey = sensorName + ":" + location;
         window1m.computeIfAbsent(windowKey, k -> new SensorWindow()).add(value);
@@ -191,7 +215,7 @@ public class MetricsCollector {
             WireMetrics wm = entry.getValue();
             batchPayload.append(String.format(
                     "wire_stats,engine_id=local-engine,wire_id=%s,transport=%s delivered=%di,dropped=%di,queue_size=%di %d\n",
-                    entry.getKey(), wm.transport, wm.deliveredCount.sumThenReset(), wm.droppedCount.sumThenReset(), wm.currentQueueSize, timestampMs
+                    entry.getKey(), wm.getTransport(), wm.getDeliveredCount().sumThenReset(), wm.getDroppedCount().sumThenReset(), wm.getCurrentQueueSize(), timestampMs
             ));
         }
 
@@ -223,6 +247,7 @@ public class MetricsCollector {
         //  InfluxDB 전송
         if (count > 0) {
             boolean success = sendToInfluxDB(batchPayload.toString());
+            this.lastFlushSuccess = success;
 
             //  전송 실패 시 로컬 버퍼에 저장 (장애 복구)
             if (!success) {
@@ -247,6 +272,10 @@ public class MetricsCollector {
         return metricsMap.getOrDefault(flowId + ":" + nodeId, new NodeMetrics());
     }
 
+    public WireMetrics getWireMetrics(String wireId) {
+        return wireMetricsMap.get(wireId);
+    }
+
     public FlowMetrics getFlowMetrics(String flowId, List<String> nodeIds) {
         Map<String, NodeMetrics> flowNodes = new HashMap<>();
         for (String nodeId : nodeIds) {
@@ -265,11 +294,11 @@ public class MetricsCollector {
     public void recordWireEvent(String wireId, String transport, boolean success, int queueSize) {
         WireMetrics wm = wireMetricsMap.computeIfAbsent(wireId, k -> new WireMetrics(transport));
         if (success) {
-            wm.deliveredCount.increment();
+            wm.getDeliveredCount().increment();
         } else {
-            wm.droppedCount.increment(); // 큐가 꽉 차서 버려짐!
+            wm.getDroppedCount().increment(); // 큐가 꽉 차서 버려짐!
         }
-        wm.currentQueueSize = queueSize; // 최신 큐 사이즈 갱신
+        wm.setCurrentQueueSize(queueSize); // 최신 큐 사이즈 갱신
     }
 
     public void recordFlowStats(String flowId, String transport, long durationMs, boolean success) {
@@ -287,6 +316,7 @@ public class MetricsCollector {
                 flowId, eventType, user, summary, System.currentTimeMillis()
         );
         eventQueue.offer(lineProtocol);
+        notifyListeners(lineProtocol);
     }
 
     private boolean sendToInfluxDB(String payload) {
@@ -340,17 +370,22 @@ public class MetricsCollector {
     }
 
     //바구니 역할을 하는 내부 클래스 (최대, 최소, 합계, 개수 추적)
+    @Getter
     public static class SensorWindow {
-        double sum = 0;
-        double min = Double.MAX_VALUE;
-        double max = -Double.MAX_VALUE;
-        int count = 0;
+        private double sum = 0;
+        private double min = Double.MAX_VALUE;
+        private double max = -Double.MAX_VALUE;
+        private int count = 0;
 
         public synchronized void add(double value) {
             sum += value;
             count++;
             if (value < min) min = value;
             if (value > max) max = value;
+        }
+
+        public double getAvg() {
+            return count == 0 ? 0 : sum / count;
         }
     }
 

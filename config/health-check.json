@@ -1,0 +1,28 @@
+{
+  "id": "health-check",
+  "name": "Engine Health Check",
+  "description": "Periodic health check of the FBP engine.",
+  "nodes": [
+    {
+      "id": "timer",
+      "type": "TimerNode",
+      "config": {
+        "intervalMs": 5000
+      }
+    },
+    {
+      "id": "health-checker",
+      "type": "HealthCheckerNode",
+      "config": {}
+    },
+    {
+      "id": "logger",
+      "type": "LogNode",
+      "config": {}
+    }
+  ],
+  "connections": [
+    { "from": "timer:out", "to": "health-checker:in" },
+    { "from": "health-checker:out", "to": "logger:in" }
+  ]
+}

@@ -13,15 +13,29 @@ public class NodeMetrics {
     private final ConcurrentHistogram latencyHistogram = new ConcurrentHistogram(1, 3600000, 3);
     public record Snapshot(long processedCount, long errorCount, double averageTime) {}
 
-    public void recordSuccess(long timeMs) {
-        processedCount.increment();
-        totalProcessingTime.add(timeMs);
-        latencyHistogram.recordValue(timeMs);
+    private final LongAdder inCount = new LongAdder();
+    private final LongAdder outCount = new LongAdder();
+    private final LongAdder inBytes = new LongAdder();
+    private final LongAdder outBytes = new LongAdder();
+
+    public void recordProcessing(long timeMs, boolean success, int inB, int outB) {
+        inCount.increment();
+        inBytes.add(inB);
+        if (success) {
+            processedCount.increment();
+            outCount.increment();
+            outBytes.add(outB);
+            totalProcessingTime.add(timeMs);
+            latencyHistogram.recordValue(timeMs);
+        } else {
+            errorCount.increment();
+        }
     }
 
-    public void recordError() {
-        errorCount.increment();
-    }
+    public long getInCount() { return inCount.sum(); }
+    public long getOutCount() { return outCount.sum(); }
+    public long getInBytes() { return inBytes.sum(); }
+    public long getOutBytes() { return outBytes.sum(); }
 
     public long getProcessedCount() { return processedCount.sum(); }
     public long getErrorCount() { return errorCount.sum(); }

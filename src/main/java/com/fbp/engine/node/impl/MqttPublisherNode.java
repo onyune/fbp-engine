@@ -32,7 +32,7 @@ public class MqttPublisherNode extends ProtocolNode {
         this.objectMapper = new ObjectMapper();
 
         this.brokerUrl = (String) getConfig("brokerUrl");
-        this.clientId = (String) getConfig("clientId");
+        this.clientId = (String) getConfig("clientId") + "-" + System.currentTimeMillis();
         this.topic = (String) getConfig("topic");
         Object qosObj = getConfig("qos");
         this.qos = (qosObj instanceof Number) ? ((Number) qosObj).intValue() : 1;

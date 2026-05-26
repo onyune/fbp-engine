@@ -1,0 +1,91 @@
+{
+  "id": "smart-building",
+  "name": "Smart Building Monitoring (with Pressure)",
+  "transport": {
+    "type": "mqtt",
+    "broker": "tcp://localhost:1884",
+    "qos": 1
+  },
+  "nodes": [
+    {
+      "id": "mqtt-sub",
+      "type": "MqttSubscriberNode",
+      "config": {
+        "brokerUrl": "tcp://localhost:1883",
+        "clientId": "fbp-building-sub",
+        "topic": "building/data/+"
+      }
+    },
+    {
+      "id": "router",
+      "type": "DynamicRouterNode",
+      "config": {
+        "rules": [
+          { "field": "topic", "operator": "==", "targetValue": "building/data/temp", "targetPort": "temp" },
+          { "field": "topic", "operator": "==", "targetValue": "building/data/humidity", "targetPort": "humidity" },
+          { "field": "topic", "operator": "==", "targetValue": "building/data/pressure", "targetPort": "pressure" }
+        ],
+        "defaultPort": "default"
+      }
+    },
+    {
+      "id": "temp-rule",
+      "type": "ThresholdFilterNode",
+      "config": {
+        "field": "temperature",
+        "threshold": 30.0
+      }
+    },
+    {
+      "id": "humidity-rule",
+      "type": "ThresholdFilterNode",
+      "config": {
+        "field": "humidity",
+        "threshold": 60.0
+      }
+    },
+    {
+      "id": "pressure-rule",
+      "type": "ThresholdFilterNode",
+      "config": {
+        "field": "pressure",
+        "threshold": 1013.0
+      }
+    },
+    {
+      "id": "modbus-writer",
+      "type": "ModbusWriterNode",
+      "config": {
+        "host": "localhost",
+        "port": 1502,
+        "valueField": "temperature",
+        "slaveId": 1,
+        "registerAddress": 100
+      }
+    },
+    {
+      "id": "mqtt-pub",
+      "type": "MqttPublisherNode",
+      "config": {
+        "brokerUrl": "tcp://localhost:1883",
+        "clientId": "fbp-building-pub",
+        "topic": "building/alerts"
+      }
+    },
+    {
+      "id": "alert",
+      "type": "AlertNode",
+      "config": {}
+    }
+  ],
+  "connections": [
+    { "from": "mqtt-sub:out", "to": "router:in" },
+    { "from": "router:temp", "to": "temp-rule:in" },
+    { "from": "router:humidity", "to": "humidity-rule:in" },
+    { "from": "router:pressure", "to": "pressure-rule:in" },
+    { "from": "temp-rule:alert", "to": "alert:in" },
+    { "from": "temp-rule:normal", "to": "modbus-writer:in" },
+    { "from": "humidity-rule:alert", "to": "mqtt-pub:in" },
+    { "from": "pressure-rule:alert", "to": "alert:in" }
+  ]
+}

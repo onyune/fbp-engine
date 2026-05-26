@@ -21,12 +21,17 @@ public abstract class AbstractNode implements Node{
     @Setter
     private String id;
 
-    @Setter
     @Getter
+    @Setter
     private String flowId;
+
+    @Getter
+    @Setter
+    private Map<String, Object> config = new HashMap<>();
 
 
     public AbstractNode(String id) {
+
         this.id = id;
         this.outputPorts.put("error", new ErrorPort());
     }

@@ -30,8 +30,11 @@ public class MqttBridgeConnection implements Connection {
     private InputPort target;
 
     private final BlockingQueue<Message> internalQueue;
+    @Getter
     private final String brokerUrl;
+    @Getter
     private final String topic;
+    @Getter
     private final int qos;
     private final MessageSerializer serializer;
 

@@ -5,6 +5,7 @@ import com.fbp.engine.node.AbstractNode;
 import com.fbp.engine.node.RoutingRule;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -16,6 +17,28 @@ public class DynamicRouterNode extends AbstractNode {
         super(id);
         addInputPort("in");
         addOutputPort(defaultPortName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public DynamicRouterNode(String id, Map<String, Object> config) {
+        super(id);
+        setConfig(config);
+        addInputPort("in");
+        
+        String dPort = (String) config.get("defaultPort");
+        if (dPort != null) this.defaultPortName = dPort;
+        addOutputPort(this.defaultPortName);
+
+        List<Map<String, Object>> configRules = (List<Map<String, Object>>) config.get("rules");
+        if (configRules != null) {
+            for (Map<String, Object> r : configRules) {
+                String field = (String) r.get("field");
+                String operator = (String) r.get("operator");
+                Object targetValue = r.get("targetValue");
+                String targetPort = (String) r.get("targetPort");
+                addRule(new RoutingRule(field, operator, targetValue, targetPort));
+            }
+        }
     }
 
     public void addRule (RoutingRule rule){

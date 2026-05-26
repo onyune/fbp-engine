@@ -61,6 +61,7 @@ public class FlowManager {
 
             absNode.setId(nodeDef.id());
             absNode.setFlowId(flow.getId());
+            absNode.setConfig(nodeDef.config());
             flow.addNode(absNode);
             createdNodes.put(nodeDef.id(), absNode);
         }
@@ -168,6 +169,7 @@ public class FlowManager {
         AbstractNode absNode = (AbstractNode) node;
         absNode.setId(nodeDef.id());
         absNode.setFlowId(flowId);
+        absNode.setConfig(nodeDef.config());
         flow.addNode(absNode);
 
         //플로우가 실행 중이라면 방금 추가된 노드도 바로 실행
@@ -312,6 +314,10 @@ public class FlowManager {
             result.add(String.format("[Rev %d] Nodes: %d, Wires: %d", i, def.nodes().size(), def.connections().size()));
         }
         return result;
+    }
+
+    public List<FlowDefinition> getRawHistory(String flowId) {
+        return flowHistory.get(flowId);
     }
 
     /**
