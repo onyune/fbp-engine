@@ -79,7 +79,7 @@ public class FlowManager {
                         definition.id(),
                         connDef.sourceId(), connDef.sourcePort(),
                         connDef.targetId(), connDef.targetPort());
-                int qos = (transportDef.qos() != null ) ? transportDef.qos() : null ;
+                int qos = (transportDef.qos() != null ) ? transportDef.qos() : 1 ;
                 connection = new MqttBridgeConnection(
                         connId,
                         transportDef.broker(),
@@ -261,6 +261,24 @@ public class FlowManager {
                 .filter(n -> !existingNodeIds.contains(n.id()))
                 .collect(Collectors.toSet());
 
+        // 설정이 변경된 노드 식별 (ID는 같지만 내용이 다른 경우)
+        List<FlowDefinition> history = flowHistory.get(flowId);
+        FlowDefinition latestDef = (history != null && !history.isEmpty()) ? history.get(history.size() - 1) : null;
+        
+        Set<NodeDefinition> nodesToUpdate = new java.util.HashSet<>();
+        if (latestDef != null) {
+            for (NodeDefinition newNode : newDef.nodes()) {
+                if (existingNodeIds.contains(newNode.id())) {
+                    NodeDefinition oldNode = latestDef.nodes().stream()
+                            .filter(o -> o.id().equals(newNode.id()))
+                            .findFirst().orElse(null);
+                    if (oldNode != null && !oldNode.equals(newNode)) {
+                        nodesToUpdate.add(newNode);
+                    }
+                }
+            }
+        }
+
         Set<String> connsToRemove = new java.util.HashSet<>(existingConnIds);
         connsToRemove.removeAll(newConnIds);
 
@@ -271,8 +289,8 @@ public class FlowManager {
                 })
                 .collect(Collectors.toSet());
 
-        log.info("[Patch Diff] -Nodes: {}, +Nodes: {}, -Wires: {}, +Wires: {}",
-                nodesToRemove.size(), nodesToAdd.size(), connsToRemove.size(), connsToAdd.size());
+        log.info("[Patch Diff] -Nodes: {}, +Nodes: {}, ~Nodes: {}, -Wires: {}, +Wires: {}",
+                nodesToRemove.size(), nodesToAdd.size(), nodesToUpdate.size(), connsToRemove.size(), connsToAdd.size());
 
         for (String connId : connsToRemove) {
             removeConnection(flowId, connId);
@@ -282,6 +300,11 @@ public class FlowManager {
         for (String nodeId : nodesToRemove) {
             removeNode(flowId, nodeId);
             log.info("  [-] Node 제거 완료: {}", nodeId);
+        }
+
+        for (NodeDefinition nodeDef : nodesToUpdate) {
+            updateNodeConfig(flowId, nodeDef.id(), nodeDef.config());
+            log.info("  [~] Node 설정 업데이트 완료: {}", nodeDef.id());
         }
 
         for (NodeDefinition nodeDef : nodesToAdd) {

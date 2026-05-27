@@ -32,7 +32,7 @@ public class MqttPublisherNode extends ProtocolNode {
         this.objectMapper = new ObjectMapper();
 
         this.brokerUrl = (String) getConfig("brokerUrl");
-        this.clientId = (String) getConfig("clientId") + "-" + System.currentTimeMillis();
+        this.clientId = (String) getConfig("clientId");
         this.topic = (String) getConfig("topic");
         Object qosObj = getConfig("qos");
         this.qos = (qosObj instanceof Number) ? ((Number) qosObj).intValue() : 1;
@@ -47,11 +47,20 @@ public class MqttPublisherNode extends ProtocolNode {
 
     @Override
     protected void connect() throws Exception {
+        if (client != null) {
+            try {
+                if (client.isConnected()) client.disconnectForcibly();
+                client.close();
+            } catch (Exception e) {
+                log.warn("[{}] 기존 클라이언트 강제 종료 중 에러 (무시가능): {}", getId(), e.getMessage());
+            }
+        }
         MqttConnectionOptions options = new MqttConnectionOptions();
         options.setCleanStart(true);
         options.setAutomaticReconnect(true);
+        String uniqueClientId = this.clientId + "-" + System.nanoTime();
 
-        client = new MqttClient(brokerUrl, clientId);
+        client = new MqttClient(brokerUrl, uniqueClientId);
         log.info("[{}] MQTT Broker({}) 연결 시도", getId(), brokerUrl);
         client.connect(options);
         log.info("[{}] MQTT Broker 연결 완료 (Publisher)", getId());

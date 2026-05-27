@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class EngineMain {
 
     public static void main(String[] args) {
-        log.info("=== FBP 엔진 및 API 서버 부팅을 시작합니다 ===");
         DomainMetricsExtractor.getInstance().addRule(
                 "api-test-flow",
                 new DomainMetricRule("temperature", "gen", "out", "value")
@@ -110,7 +109,6 @@ public class EngineMain {
             apiServer.start(flowManager);
 
             log.info("=== [성공] HTTP API 서버가 포트 {} 에서 실행 중입니다 ===", port);
-            log.info("Postman이나 터미널에서 다음 API를 호출해 보세요:");
             log.info("   - 상태 확인: GET http://localhost:{}/health", port);
             log.info("   - 플로우 배포: POST http://localhost:{}/flows", port);
 

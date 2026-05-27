@@ -31,7 +31,7 @@ public class MqttSubscriberNode extends ProtocolNode {
         addOutputPort("out");
         this.objectMapper = new ObjectMapper();
         this.brokerUrl = (String) getConfig("brokerUrl");
-        this.clientId = (String) getConfig("clientId") + "-" + System.currentTimeMillis();
+        this.clientId = (String) getConfig("clientId");
         this.topic = (String) getConfig("topic");
         Object qosObj = getConfig("qos");
         this.qos = (qosObj instanceof Number) ? ((Number) qosObj).intValue() : 1;
@@ -42,11 +42,21 @@ public class MqttSubscriberNode extends ProtocolNode {
 
     @Override
     protected void connect() throws Exception {
+        if (client != null) {
+            try {
+                if (client.isConnected()) client.disconnectForcibly();
+                client.close();
+            } catch (Exception e) {
+                log.warn("[{}] 기존 클라이언트 강제 종료 중 에러 (무시가능): {}", getId(), e.getMessage());
+            }
+        }
         MqttConnectionOptions options = new MqttConnectionOptions();
         options.setCleanStart(true);
         options.setAutomaticReconnect(true);
 
-        client = new MqttClient(brokerUrl, clientId);
+        String uniqueClientId = this.clientId + "-" + System.nanoTime();
+
+        client = new MqttClient(brokerUrl, uniqueClientId);
         client.setCallback(new MqttCallback() {
             /**
              * 구독한 topic으로 누군가 메시지를 publish(발행)해서, 브로커가 데이터를 밀어주었을 때 호출됨
@@ -55,34 +65,38 @@ public class MqttSubscriberNode extends ProtocolNode {
              */
             @Override
             public void messageArrived(String incomingTopic, MqttMessage mqttMessage) {
-                // 들어온 mqttMessage payload를 String으로 변환
-                String payloadStr = new String(mqttMessage.getPayload());
-                Map<String, Object> payloadMap;
+                try{
+                    // 들어온 mqttMessage payload를 String으로 변환
+                    String payloadStr = new String(mqttMessage.getPayload());
+                    Map<String, Object> payloadMap;
 
-                try {
-                    // JSON 파싱 Map으로 변환
-                    payloadMap = objectMapper.readValue(payloadStr, new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
-                } catch (Exception e) {
-                    // JSON 파싱 실패 시 예외 처리
-                    payloadMap = new HashMap<>();
-                    payloadMap.put("rawPayload", payloadStr);
+                    try {
+                        // JSON 파싱 Map으로 변환
+                        payloadMap = objectMapper.readValue(payloadStr, new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
+                    } catch (Exception e) {
+                        // JSON 파싱 실패 시 예외 처리
+                        payloadMap = new HashMap<>();
+                        payloadMap.put("rawPayload", payloadStr);
+                    }
+
+                    // 토픽과 시간 정보 추가
+                    payloadMap.put("topic", incomingTopic);
+                    payloadMap.put("mqttTimestamp", System.currentTimeMillis());
+
+                    // FBP엔진이 알아들을 수 있는 Message로 변환하여 out 포트로 전송
+                    Message message = new Message(payloadMap);
+                    send("out", message);
+
+                    log.info("[{}] 메시지 수신 및 전송 완료: {}", getId(), message);
+                }catch (Exception e){
+                    log.error("[{}] MQTT 메시지 처리(send) 중 심각한 에러 발생: ", getId(), e);
                 }
 
-                // 토픽과 시간 정보 추가
-                payloadMap.put("topic", incomingTopic);
-                payloadMap.put("mqttTimestamp", System.currentTimeMillis());
-
-                // FBP엔진이 알아들을 수 있는 Message로 변환하여 out 포트로 전송
-                Message message = new Message(payloadMap);
-                send("out", message);
-
-                log.info("[{}] 메시지 수신 및 전송 완료: {}", getId(), message);
             }
 
             @Override
             public void disconnected(MqttDisconnectResponse response) {
-                log.warn("[{}] MQTT Broker 연결 끊김: {}", getId(), response.getReasonString());
-            }
+                log.warn("[{}] MQTT Broker 연결 끊김 사유: {}", getId(), response.getReasonString(), response.getException());            }
 
             /**
              * 자동 재연결에 성공했을 때
