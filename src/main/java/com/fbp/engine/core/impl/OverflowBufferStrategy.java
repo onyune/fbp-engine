@@ -7,7 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * 임시버퍼에 저장하는 방식
+ * 임시버퍼에 저장하는 방식 (기본 큐가 꽉 차면 임시 확장 버퍼나 디스크에 쓰는 등의 로직을 담을 수 있음)
  */
 public class OverflowBufferStrategy implements BackpressureStrategy {
     private final Queue<Message> overflowBuffer = new ConcurrentLinkedQueue<>();

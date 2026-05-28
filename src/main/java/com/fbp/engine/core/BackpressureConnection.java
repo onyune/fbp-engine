@@ -30,9 +30,12 @@ public class BackpressureConnection extends LocalConnection {
      * @param message
      */
     public void send(Message message){
+        // 주입된 전략 객체에게 처리를 위임
         Message droppedMessage = strategy.handle(queue, message);
+        // 만약 전략에 의해 메시지가 버려졌다면
         if (droppedMessage != null) {
-            dropCount.incrementAndGet();
+            dropCount.incrementAndGet(); // 버려진 카운트 증가 (메트릭 수집용)
+            // DLQ 포트가 설정되어 있다면 버려진 메시지를 살려냄
             if (deadLetterPort != null) {
                 deadLetterPort.receive(droppedMessage);
             }
